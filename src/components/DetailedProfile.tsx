@@ -1,7 +1,7 @@
-import { ArrowLeft, User, FileText, BarChart3, Award, Download } from "lucide-react";
-import imgImage from "figma:asset/0b3edc4f7257e9376d9a28a57d620b0c4246fe9b.png";
+import { ArrowLeft, User, FileText, BarChart3, Award, Download, Calendar, TrendingUp, Sparkles, Trophy, Target, Zap } from "lucide-react";
+import { Card } from "./ui/card";
+import { Button } from "./ui/button";
 
-// Mock detailed data
 const mockDetailedData = {
   name: "Maria Silva Santos",
   cpf: "123.456.789-00",
@@ -48,278 +48,319 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
   console.log("DetailedProfile - inscription:", inscription);
 
   return (
-    <div className="bg-white relative min-h-screen w-full pb-24">
-      {/* Background */}
-      <div className="absolute h-full left-0 top-0 w-full bg-[#F8F9FA]" />
+    <div className="min-h-screen w-full bg-background relative overflow-hidden pb-12">
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.15),transparent)]" />
       
       {/* Header */}
-      <div className="relative bg-[#1351b4] h-[111px] w-full">
-        <p className="absolute font-['Inter'] font-bold text-[28px] text-white top-[23px] left-[28px] leading-[33.6px]">
-          Consulta de Resultados CNU
-        </p>
-        <p className="absolute font-['Inter'] font-normal text-[14px] text-[#e0e6ed] top-[66px] left-[28px] leading-[21px]">
-          Concurso Nacional Unificado
-        </p>
+      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+        <div className="container mx-auto px-6 py-8 relative">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-2xl">
+              <Sparkles className="size-8 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold text-white tracking-tight">
+              CNU Resultados
+            </h1>
+          </div>
+          <p className="text-white/90 text-base ml-14">
+            Sistema de Consulta de Resultados do Concurso Nacional Unificado
+          </p>
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="relative flex justify-center pt-8">
-        <div className="w-[900px] space-y-6">
-          {/* Back Button */}
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 font-['Inter'] font-medium text-[14px] text-[#1351b4] hover:text-[#0c3d8a] transition-colors"
-          >
-            <ArrowLeft className="size-4" />
-            Voltar para resultados
-          </button>
+      <div className="container mx-auto px-6 py-8 max-w-6xl relative">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={onBack}
+          className="mb-6 text-primary hover:text-primary hover:bg-primary/10 -ml-2"
+        >
+          <ArrowLeft className="size-4 mr-2" />
+          Voltar para resultados
+        </Button>
 
+        <div className="space-y-6">
           {/* Profile Header */}
-          <div className="bg-white rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] p-8">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-start gap-4">
-                <div className="bg-[#1351b4] rounded-full p-4">
-                  <User className="size-8 text-white" />
+          <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-full blur-3xl" />
+            <div className="p-8 relative">
+              <div className="flex items-start justify-between mb-10">
+                <div className="flex items-start gap-6">
+                  <div className="p-5 bg-gradient-to-br from-primary to-secondary rounded-3xl shadow-2xl shadow-primary/30">
+                    <User className="size-12 text-white" strokeWidth={2} />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent mb-3">
+                      {mockDetailedData.name}
+                    </h1>
+                    <p className="text-base text-muted-foreground flex items-center gap-2">
+                      <Zap className="size-4 text-primary" />
+                      CPF: {mockDetailedData.cpf} • Inscrição: {mockDetailedData.inscricao}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="font-['Inter'] font-bold text-[28px] text-[#1f2937] leading-[36px] mb-2">
-                    {mockDetailedData.name}
-                  </h1>
-                  <p className="font-['Inter'] font-normal text-[14px] text-[#6b7280] leading-[21px]">
-                    CPF: {mockDetailedData.cpf} | Inscrição: {mockDetailedData.inscricao}
+                <Button className="rounded-full shadow-xl h-12 bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-2xl hover:shadow-primary/40 font-bold">
+                  <Download className="size-4 mr-2" />
+                  Baixar Comprovante
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-8">
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Sparkles className="size-3.5 text-primary" />
+                    E-mail
+                  </p>
+                  <p className="text-lg text-foreground font-medium">
+                    {mockDetailedData.email}
+                  </p>
+                </div>
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <Sparkles className="size-3.5 text-primary" />
+                    Telefone
+                  </p>
+                  <p className="text-lg text-foreground font-medium">
+                    {mockDetailedData.telefone}
                   </p>
                 </div>
               </div>
-              <button className="flex items-center gap-2 bg-[#1351b4] h-[40px] px-4 rounded-[6px] font-['Inter'] font-medium text-[14px] text-white hover:bg-[#0c3d8a] transition-colors">
-                <Download className="size-4" />
-                Baixar Comprovante
-              </button>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  E-mail
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.email}
-                </p>
-              </div>
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  Telefone
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.telefone}
-                </p>
-              </div>
-            </div>
-          </div>
+          </Card>
 
           {/* Cargo Information */}
-          <div className="bg-white rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className="size-5 text-[#1351b4]" />
-              <h2 className="font-['Inter'] font-bold text-[20px] text-[#1f2937] leading-[28px]">
-                Informações do Cargo
-              </h2>
+          <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95 overflow-hidden relative">
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-secondary/20 to-primary/20 rounded-full blur-3xl" />
+            <div className="p-8 relative">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl border border-primary/30">
+                  <FileText className="size-7 text-primary" />
+                </div>
+                <h2 className="text-2xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Informações do Cargo
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                    Cargo
+                  </p>
+                  <p className="text-lg text-foreground font-bold">
+                    {mockDetailedData.cargo}
+                  </p>
+                </div>
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                    Área
+                  </p>
+                  <p className="text-lg text-foreground font-bold flex items-center gap-2">
+                    <Target className="size-5 text-primary" />
+                    {mockDetailedData.area}
+                  </p>
+                </div>
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                    Órgão
+                  </p>
+                  <p className="text-lg text-foreground font-bold">
+                    {mockDetailedData.orgao}
+                  </p>
+                </div>
+                <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
+                    Localidade
+                  </p>
+                  <p className="text-lg text-foreground font-bold">
+                    {mockDetailedData.localidade}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  Cargo
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.cargo}
-                </p>
-              </div>
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  Área
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.area}
-                </p>
-              </div>
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  Órgão
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.orgao}
-                </p>
-              </div>
-              <div>
-                <p className="font-['Inter'] font-semibold text-[12px] text-[#6b7280] leading-[18px] mb-1">
-                  Localidade
-                </p>
-                <p className="font-['Inter'] font-normal text-[14px] text-[#1f2937] leading-[21px]">
-                  {mockDetailedData.localidade}
-                </p>
-              </div>
-            </div>
-          </div>
+          </Card>
 
           {/* Performance Summary */}
-          <div className="bg-white rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Award className="size-5 text-[#1351b4]" />
-              <h2 className="font-['Inter'] font-bold text-[20px] text-[#1f2937] leading-[28px]">
-                Desempenho Geral
-              </h2>
-            </div>
-            
-            <div className="bg-[#ecfdf5] border border-[#6ee7b7] rounded-[8px] p-6 mb-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-['Inter'] font-semibold text-[14px] text-[#065f46] leading-[21px] mb-1">
-                    Status da Aprovação
-                  </p>
-                  <p className="font-['Inter'] font-bold text-[24px] text-[#059669] leading-[32px]">
-                    {mockDetailedData.status.toUpperCase()}
-                  </p>
+          <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-500/20 to-green-500/20 rounded-full blur-3xl" />
+            <div className="p-8 relative">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-gradient-to-br from-emerald-500/20 to-green-500/20 rounded-2xl border border-emerald-500/30">
+                  <Award className="size-7 text-emerald-500" />
                 </div>
-                <div className="text-right">
-                  <p className="font-['Inter'] font-normal text-[14px] text-[#047857] leading-[21px] mb-1">
-                    Posição na Classificação
-                  </p>
-                  <p className="font-['Inter'] font-bold text-[32px] text-[#059669] leading-[40px]">
-                    {mockDetailedData.posicao}º
-                  </p>
-                  <p className="font-['Inter'] font-normal text-[12px] text-[#047857] leading-[18px]">
-                    de {mockDetailedData.totalCandidatos} candidatos
-                  </p>
-                </div>
+                <h2 className="text-2xl font-black bg-gradient-to-r from-emerald-500 to-green-600 bg-clip-text text-transparent">
+                  Desempenho Geral
+                </h2>
               </div>
-            </div>
+              
+              {/* Status Card */}
+              <Card className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 backdrop-blur-sm mb-8 overflow-hidden relative">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.2),transparent)]" />
+                <div className="p-8 relative">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold text-emerald-200 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <Trophy className="size-5" />
+                        Status da Aprovação
+                      </p>
+                      <p className="text-5xl font-black text-white flex items-center gap-3">
+                        {mockDetailedData.status.toUpperCase()}
+                        <TrendingUp className="size-10 text-emerald-300" strokeWidth={3} />
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-base font-bold text-emerald-200 mb-3">
+                        Posição na Classificação
+                      </p>
+                      <p className="text-7xl font-black text-white">
+                        {mockDetailedData.posicao}º
+                      </p>
+                      <p className="text-sm text-emerald-200 mt-2">
+                        de {mockDetailedData.totalCandidatos} candidatos
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-[#f0f4ff] rounded-[6px] p-4 text-center">
-                <p className="font-['Inter'] font-normal text-[12px] text-[#6b7280] leading-[18px] mb-2">
-                  Nota Final
-                </p>
-                <p className="font-['Inter'] font-bold text-[32px] text-[#1351b4] leading-[40px]">
-                  {mockDetailedData.notaFinal}
-                </p>
-              </div>
-              <div className="bg-[#f9fafb] rounded-[6px] p-4 text-center">
-                <p className="font-['Inter'] font-normal text-[12px] text-[#6b7280] leading-[18px] mb-2">
-                  Nota de Corte
-                </p>
-                <p className="font-['Inter'] font-bold text-[32px] text-[#374151] leading-[40px]">
-                  {mockDetailedData.notaCorte}
-                </p>
-              </div>
-              <div className="bg-[#f9fafb] rounded-[6px] p-4 text-center">
-                <p className="font-['Inter'] font-normal text-[12px] text-[#6b7280] leading-[18px] mb-2">
-                  Diferença
-                </p>
-                <p className="font-['Inter'] font-bold text-[32px] text-[#059669] leading-[40px]">
-                  +{(mockDetailedData.notaFinal - mockDetailedData.notaCorte).toFixed(1)}
-                </p>
+              <div className="grid grid-cols-3 gap-6">
+                <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30 shadow-lg shadow-primary/20">
+                  <div className="p-6 text-center">
+                    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-4">
+                      Nota Final
+                    </p>
+                    <p className="text-6xl font-black bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
+                      {mockDetailedData.notaFinal}
+                    </p>
+                  </div>
+                </Card>
+                <Card className="bg-muted/50 border-2 border-border shadow-lg">
+                  <div className="p-6 text-center">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">
+                      Nota de Corte
+                    </p>
+                    <p className="text-6xl font-black text-foreground">
+                      {mockDetailedData.notaCorte}
+                    </p>
+                  </div>
+                </Card>
+                <Card className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 shadow-lg shadow-emerald-500/20">
+                  <div className="p-6 text-center">
+                    <p className="text-xs font-bold text-emerald-200 uppercase tracking-widest mb-4">
+                      Diferença
+                    </p>
+                    <p className="text-6xl font-black text-emerald-100">
+                      +{(mockDetailedData.notaFinal - mockDetailedData.notaCorte).toFixed(1)}
+                    </p>
+                  </div>
+                </Card>
               </div>
             </div>
-          </div>
+          </Card>
 
           {/* Detailed Scores */}
-          <div className="bg-white rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <BarChart3 className="size-5 text-[#1351b4]" />
-              <h2 className="font-['Inter'] font-bold text-[20px] text-[#1f2937] leading-[28px]">
-                Detalhamento por Prova
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              {mockDetailedData.provas.map((prova, index) => (
-                <div key={index} className="border border-[#e5e7eb] rounded-[8px] p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3 className="font-['Inter'] font-semibold text-[16px] text-[#1f2937] leading-[24px]">
-                      {prova.nome}
-                    </h3>
-                    <div className="text-right">
-                      <p className="font-['Inter'] font-bold text-[20px] text-[#1351b4] leading-[28px]">
-                        {prova.nota}
-                      </p>
-                      <p className="font-['Inter'] font-normal text-[12px] text-[#6b7280] leading-[18px]">
-                        de {prova.notaMaxima}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-2">
-                    <div className="flex justify-between mb-1">
-                      <p className="font-['Inter'] font-normal text-[12px] text-[#6b7280] leading-[18px]">
-                        Aproveitamento
-                      </p>
-                      <p className="font-['Inter'] font-semibold text-[12px] text-[#1f2937] leading-[18px]">
-                        {prova.percentual}%
-                      </p>
-                    </div>
-                    <div className="bg-[#e5e7eb] h-2 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-[#1351b4] h-full rounded-full transition-all"
-                        style={{ width: `${prova.percentual}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  <p className="font-['Inter'] font-normal text-[13px] text-[#6b7280] leading-[19.5px]">
-                    Questões corretas: {prova.questoesCorretas} de {prova.questoesTotais}
-                  </p>
+          <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95 overflow-hidden relative">
+            <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tr from-accent/20 to-primary/20 rounded-full blur-3xl" />
+            <div className="p-8 relative">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-gradient-to-br from-accent/20 to-primary/20 rounded-2xl border border-accent/30">
+                  <BarChart3 className="size-7 text-accent" />
                 </div>
-              ))}
+                <h2 className="text-2xl font-black bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
+                  Detalhamento por Prova
+                </h2>
+              </div>
+
+              <div className="space-y-6">
+                {mockDetailedData.provas.map((prova, index) => (
+                  <Card key={index} className="border-2 border-border shadow-lg backdrop-blur-sm bg-card/80 overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-2xl" />
+                    <div className="p-6 relative">
+                      <div className="flex justify-between items-start mb-6">
+                        <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                          <Zap className="size-5 text-primary" />
+                          {prova.nome}
+                        </h3>
+                        <div className="text-right">
+                          <p className="text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            {prova.nota}
+                          </p>
+                          <p className="text-sm text-muted-foreground font-semibold">
+                            de {prova.notaMaxima}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="mb-5">
+                        <div className="flex justify-between mb-3">
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                            Aproveitamento
+                          </p>
+                          <p className="text-lg font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            {prova.percentual}%
+                          </p>
+                        </div>
+                        <div className="h-3 bg-muted/50 rounded-full overflow-hidden border border-border/50">
+                          <div 
+                            className="h-full bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-full transition-all duration-1000 shadow-lg"
+                            style={{ width: `${prova.percentual}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      <p className="text-base text-muted-foreground">
+                        Questões corretas: <span className="font-black text-foreground text-lg">{prova.questoesCorretas}</span> de {prova.questoesTotais}
+                      </p>
+                    </div>
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
+          </Card>
 
           {/* Timeline */}
-          <div className="bg-white rounded-[8px] shadow-[0px_2px_8px_0px_rgba(0,0,0,0.08)] p-6">
-            <h2 className="font-['Inter'] font-bold text-[20px] text-[#1f2937] leading-[28px] mb-4">
-              Cronologia
-            </h2>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="bg-[#1351b4] rounded-full size-2 mt-2" />
-                <div>
-                  <p className="font-['Inter'] font-semibold text-[14px] text-[#1f2937] leading-[21px]">
-                    Aplicação da Prova
-                  </p>
-                  <p className="font-['Inter'] font-normal text-[13px] text-[#6b7280] leading-[19.5px]">
-                    {mockDetailedData.dataProva}
-                  </p>
+          <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95">
+            <div className="p-8">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-3 bg-gradient-to-br from-secondary/20 to-primary/20 rounded-2xl border border-secondary/30">
+                  <Calendar className="size-7 text-secondary" />
                 </div>
+                <h2 className="text-2xl font-black bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                  Cronologia
+                </h2>
               </div>
-              <div className="flex items-start gap-3">
-                <div className="bg-[#1351b4] rounded-full size-2 mt-2" />
-                <div>
-                  <p className="font-['Inter'] font-semibold text-[14px] text-[#1f2937] leading-[21px]">
-                    Divulgação dos Resultados
-                  </p>
-                  <p className="font-['Inter'] font-normal text-[13px] text-[#6b7280] leading-[19.5px]">
-                    {mockDetailedData.dataResultado}
-                  </p>
+              <div className="space-y-6">
+                <div className="flex items-start gap-5">
+                  <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-full shadow-lg shadow-primary/30">
+                    <div className="size-3 bg-white rounded-full" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-xl text-foreground mb-2">
+                      Aplicação da Prova
+                    </p>
+                    <p className="text-base text-muted-foreground">
+                      {mockDetailedData.dataProva}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-5">
+                  <div className="p-3 bg-gradient-to-br from-secondary to-primary rounded-full shadow-lg shadow-secondary/30">
+                    <div className="size-3 bg-white rounded-full" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-xl text-foreground mb-2">
+                      Divulgação dos Resultados
+                    </p>
+                    <p className="text-base text-muted-foreground">
+                      {mockDetailedData.dataResultado}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="fixed bottom-0 w-full bg-white border-t border-[#e5e7eb] h-[73px] flex items-center px-[28px] justify-between">
-        <div className="h-[32px] w-[96px]">
-          <img alt="GOV.BR" className="h-full w-full object-contain" src={imgImage} />
-        </div>
-        <div className="flex gap-8">
-          <button className="font-['Inter'] font-normal text-[14px] text-[#6b7280] leading-[21px] hover:text-[#1351b4]">
-            Meus Dados
-          </button>
-          <button className="font-['Inter'] font-normal text-[14px] text-[#6b7280] leading-[21px] hover:text-[#1351b4]">
-            Ajuda
-          </button>
-          <button className="font-['Inter'] font-normal text-[14px] text-[#6b7280] leading-[21px] hover:text-[#1351b4]">
-            Acessibilidade
-          </button>
+          </Card>
         </div>
       </div>
     </div>
