@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Lock, Info, TestTube, Sparkles, Zap } from "lucide-react";
+import { Search, Lock, Info, TestTube, Sparkles, Zap, User } from "lucide-react";
 import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -7,9 +7,10 @@ import { Button } from "./ui/button";
 
 interface ConsultationFormProps {
   onSubmit: (inscription: string) => void;
+  onViewProfile?: () => void;
 }
 
-export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
+export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormProps) {
   const [inscription, setInscription] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,18 +32,18 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
       
       {/* Header with Gradient */}
       <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L2JhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCIvPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="container mx-auto px-6 py-8 relative">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-2xl">
               <Sparkles className="size-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold text-white tracking-tight">
-              CNU Resultados
+              Startplay Simulados
             </h1>
           </div>
           <p className="text-white/90 text-base ml-14">
-            Sistema de Consulta de Resultados do Concurso Nacional Unificado
+            Portal de Desempenho e Análise
           </p>
         </div>
       </div>
@@ -69,11 +70,11 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6 mt-8">
-              {/* Número de Inscrição */}
+              {/* ID do Simulado */}
               <div className="space-y-2">
                 <Label htmlFor="inscription" className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <Zap className="size-4 text-primary" />
-                  Número de Inscrição
+                  ID do Simulado
                   <span className="text-secondary ml-1">*</span>
                 </Label>
                 <Input
@@ -84,7 +85,7 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
                     const value = e.target.value.replace(/\D/g, "").slice(0, 12);
                     setInscription(value);
                   }}
-                  placeholder="Digite os 12 dígitos"
+                  placeholder="Digite o ID da prova (12 dígitos)"
                   className="h-16 text-lg border-2 border-input bg-input-background focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all rounded-2xl font-medium"
                   maxLength={12}
                 />
@@ -94,17 +95,17 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
                 </p>
               </div>
 
-              {/* Concurso - Locked Field */}
+              {/* Simulado Atual - Locked Field */}
               <div className="space-y-2">
                 <Label htmlFor="contest" className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <Lock className="size-4 text-muted-foreground" />
-                  Concurso
+                  Simulado Atual
                 </Label>
                 <div className="relative">
                   <Input
                     id="contest"
                     type="text"
-                    value="CNU - Edição Unificada"
+                    value="Conhecimentos Gerais - Nível 1"
                     disabled
                     className="h-16 text-lg bg-muted/50 border-2 border-border cursor-not-allowed opacity-60 pl-14 rounded-2xl"
                     readOnly
@@ -113,7 +114,7 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
                 </div>
                 <p className="text-xs text-muted-foreground flex items-center gap-1.5 ml-1">
                   <Info className="size-3.5" />
-                  Concurso fixo para esta edição
+                  Este ID é único para cada tentativa de simulado gerada.
                 </p>
               </div>
 
@@ -127,6 +128,19 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
                 <Search className="size-6 mr-3 relative z-10" />
                 <span className="relative z-10">Consultar Resultado</span>
               </Button>
+
+              {/* View Profile Button */}
+              {onViewProfile && (
+                <Button
+                  type="button"
+                  onClick={onViewProfile}
+                  variant="outline"
+                  className="w-full h-12 text-base rounded-full border-2 border-primary/50 hover:bg-primary/10 transition-all font-semibold mt-3"
+                >
+                  <User className="size-5 mr-2" />
+                  Ver Perfil Completo
+                </Button>
+              )}
             </form>
 
             {/* Information Card */}
@@ -144,15 +158,15 @@ export function ConsultationForm({ onSubmit }: ConsultationFormProps) {
                     <ul className="space-y-2 text-sm text-foreground/80">
                       <li className="flex items-start gap-2">
                         <span className="text-primary mt-0.5">•</span>
-                        <span>Mantenha seu número de inscrição em local seguro</span>
+                        <span>Mantenha seu ID do simulado em local seguro</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-secondary mt-0.5">•</span>
-                        <span>Os resultados são oficiais e atualizados em tempo real</span>
+                        <span>Os resultados são atualizados em tempo real</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-accent mt-0.5">•</span>
-                        <span>Em caso de dúvidas, consulte o edital oficial</span>
+                        <span>Em caso de dúvidas, consulte a seção de ajuda do Startplay</span>
                       </li>
                     </ul>
                   </div>
