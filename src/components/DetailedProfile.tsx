@@ -53,10 +53,10 @@ const mockDetailedData = {
 function RadarChart({ data }: { data: Record<string, number> }) {
   const entries = Object.entries(data);
   const count = entries.length;
-  const size = 280;
+  const size = 200;
   const center = size / 2;
   const maxValue = 100;
-  const radius = 100;
+  const radius = 60;
   const levels = 5;
 
   // Calcula ângulo para cada atributo (em radianos)
@@ -104,10 +104,10 @@ function RadarChart({ data }: { data: Record<string, number> }) {
   const polygonPoints = points.map(p => `${p.x},${p.y}`).join(' ');
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
+    <div className="flex flex-col items-center justify-center p-2 md:p-6">
       {/* SVG Radar Chart */}
-      <div className="flex items-center justify-center">
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <div className="flex items-center justify-center w-full max-w-[240px] md:max-w-[280px]">
+        <svg width="100%" height="100%" viewBox="-20 -20 240 240" className="max-w-full h-auto" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgb(139, 92, 246)" stopOpacity="0.3" />
@@ -171,7 +171,7 @@ function RadarChart({ data }: { data: Record<string, number> }) {
 
           {/* Labels */}
           {points.map((point, idx) => {
-            const labelDistance = 130;
+            const labelDistance = 90;
             const currentAngle = angle * idx - Math.PI / 2;
             const labelX = center + labelDistance * Math.cos(currentAngle);
             const labelY = center + labelDistance * Math.sin(currentAngle);
@@ -183,7 +183,7 @@ function RadarChart({ data }: { data: Record<string, number> }) {
                   y={labelY}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontSize="12"
+                  fontSize="10"
                   fontWeight="600"
                   fill="rgb(248, 250, 252)"
                   className="pointer-events-none select-none"
@@ -192,10 +192,10 @@ function RadarChart({ data }: { data: Record<string, number> }) {
                 </text>
                 <text
                   x={labelX}
-                  y={labelY + 16}
+                  y={labelY + 14}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fontSize="11"
+                  fontSize="9"
                   fontWeight="500"
                   fill="rgb(139, 92, 246)"
                   className="pointer-events-none select-none"
@@ -271,14 +271,14 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
           {/* Profile Header */}
           <Card className="shadow-2xl border-0 backdrop-blur-sm bg-card/95 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-full blur-3xl" />
-            <div className="p-8 relative">
-              <div className="flex items-start justify-between mb-10">
-                <div className="flex items-start gap-6">
-                  <div className="p-5 bg-gradient-to-br from-primary to-secondary rounded-3xl shadow-2xl shadow-primary/30">
-                    <User className="size-12 text-white" strokeWidth={2} />
+            <div className="p-4 md:p-8 relative">
+              <div className="flex flex-col md:flex-row items-start justify-between mb-6 md:mb-10 gap-4">
+                <div className="flex items-start gap-4 md:gap-6 w-full md:w-auto">
+                  <div className="p-3 md:p-5 bg-gradient-to-br from-primary to-secondary rounded-2xl md:rounded-3xl shadow-2xl shadow-primary/30">
+                    <User className="size-8 md:size-12 text-white" strokeWidth={2} />
                   </div>
-                  <div>
-                    <h1 className="text-4xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent mb-3">
+                  <div className="flex-1">
+                    <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent mb-2 md:mb-3">
                       {mockDetailedData.name}
                     </h1>
                     <p className="text-base text-muted-foreground flex items-center gap-2">
@@ -287,16 +287,17 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                     </p>
                   </div>
                 </div>
-                <Button className="rounded-full shadow-xl h-12 bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-2xl hover:shadow-primary/40 font-bold">
+                <Button className="rounded-full shadow-xl h-10 md:h-12 text-sm md:text-base bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-2xl hover:shadow-primary/40 font-bold w-full md:w-auto">
                   <Download className="size-4 mr-2" />
-                  Baixar PDF de Questões
+                  <span className="hidden sm:inline">Baixar PDF de Questões</span>
+                  <span className="sm:hidden">PDF</span>
                 </Button>
               </div>
 
-              <div className="grid grid-cols-3 gap-8"> {/* Changed to grid-cols-3 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
                 <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <Clock className="size-3.5 text-primary" /> {/* New icon */}
+                    <Clock className="size-3.5 text-primary" />
                     Tempo de Prova
                   </p>
                   <p className="text-lg text-foreground font-medium">
@@ -337,7 +338,7 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                   Detalhes do Simulado
                 </h2>
               </div>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="bg-muted/30 p-5 rounded-2xl border border-border/50">
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
                     Foco
@@ -389,28 +390,28 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
               </div>
               
               {/* Status Card */}
-              <Card className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 backdrop-blur-sm mb-8 overflow-hidden relative">
+              <Card className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 backdrop-blur-sm mb-6 md:mb-8 overflow-hidden relative">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.2),transparent)]" />
-                <div className="p-8 relative">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-bold text-emerald-200 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <Trophy className="size-5" />
+                <div className="p-4 md:p-8 relative">
+                  <div className="flex flex-col md:flex-row items-center md:items-center justify-between gap-4 md:gap-0">
+                    <div className="text-center md:text-left">
+                      <p className="text-xs md:text-sm font-bold text-emerald-200 uppercase tracking-widest mb-2 md:mb-3 flex items-center justify-center md:justify-start gap-2">
+                        <Trophy className="size-4 md:size-5" />
                         Seu Status
                       </p>
-                      <p className="text-5xl font-black text-white flex items-center gap-3">
+                      <p className="text-3xl md:text-5xl font-black text-white flex items-center gap-2 md:gap-3">
                         {mockDetailedData.status.toUpperCase()}
-                        <TrendingUp className="size-10 text-emerald-300" strokeWidth={3} />
+                        <TrendingUp className="size-6 md:size-10 text-emerald-300" strokeWidth={3} />
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-base font-bold text-emerald-200 mb-3">
+                    <div className="text-center md:text-right">
+                      <p className="text-sm md:text-base font-bold text-emerald-200 mb-2 md:mb-3">
                         Seu Ranking
                       </p>
-                      <p className="text-7xl font-black text-white">
+                      <p className="text-5xl md:text-7xl font-black text-white">
                         {mockDetailedData.ranking}º
                       </p>
-                      <p className="text-sm text-emerald-200 mt-2">
+                      <p className="text-xs md:text-sm text-emerald-200 mt-1 md:mt-2">
                         entre {mockDetailedData.totalAlunos} alunos
                       </p>
                     </div>
@@ -418,23 +419,23 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                 </div>
               </Card>
 
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30 shadow-lg shadow-primary/20">
-                  <div className="p-6 text-center">
-                    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-4">
+                  <div className="p-4 md:p-6 text-center">
+                    <p className="text-xs font-bold text-primary uppercase tracking-widest mb-2 md:mb-4">
                       Aproveitamento Final
                     </p>
-                    <p className="text-6xl font-black bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
+                    <p className="text-4xl md:text-6xl font-black bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
                       {mockDetailedData.aproveitamentoFinal}%
                     </p>
                   </div>
                 </Card>
                 <Card className="bg-muted/50 border-2 border-border shadow-lg">
-                  <div className="p-6 text-center">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">
+                  <div className="p-4 md:p-6 text-center">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2 md:mb-4">
                       Média da Turma
                     </p>
-                    <p className="text-6xl font-black text-foreground">
+                    <p className="text-4xl md:text-6xl font-black text-foreground">
                       {mockDetailedData.mediaTurma}%
                     </p>
                   </div>
@@ -458,20 +459,20 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
             <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl" />
             <div className="p-8 relative">
               {/* Header com Nível */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <div className="p-4 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-2xl shadow-primary/50">
-                    <Sparkles className="size-8 text-white" />
+              <div className="flex flex-col md:flex-row items-center md:items-center justify-between mb-8 gap-4">
+                <div className="flex items-center gap-4 text-center md:text-left">
+                  <div className="p-3 md:p-4 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-2xl shadow-primary/50">
+                    <Sparkles className="size-6 md:size-8 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
+                    <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
                       Status do Concurseiro
                     </h2>
-                    <p className="text-sm text-muted-foreground mt-1">Análise gamificada do seu desempenho</p>
+                    <p className="text-xs md:text-sm text-muted-foreground mt-1">Análise gamificada do seu desempenho</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="relative p-6 bg-gradient-to-br from-primary/30 to-secondary/30 border-2 border-primary/50 rounded-3xl overflow-visible group hover:border-secondary/50 transition-all duration-500 min-w-max">
+                <div className="text-center md:text-right">
+                  <div className="relative p-4 md:p-6 bg-gradient-to-br from-primary/30 to-secondary/30 border-2 border-primary/50 rounded-3xl overflow-visible group hover:border-secondary/50 transition-all duration-500 min-w-max">
                     {/* Glow Background */}
                     <div className="absolute inset-0 bg-gradient-to-r from-primary via-transparent to-secondary opacity-0 group-hover:opacity-50 transition-opacity duration-500 blur-xl" />
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-pulse" />
@@ -490,8 +491,7 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                       
                       {/* Level Number */}
                       <div className="relative mb-1">
-                        <p className="font-black text-white drop-shadow-2xl" style={{
-                          fontSize: '100px',
+                        <p className="font-black text-white drop-shadow-2xl text-6xl md:text-8xl" style={{
                           lineHeight: '0.9',
                           textShadow: '0 0 30px rgba(139, 92, 246, 0.8), 0 0 60px rgba(236, 72, 153, 0.6)'
                         }}>

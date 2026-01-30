@@ -132,7 +132,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                   <Card className="bg-gradient-to-br from-muted/50 to-muted/30 border-0 backdrop-blur-sm overflow-hidden relative">
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent)]" />
                     <div className="p-6 relative">
-                      <div className="grid grid-cols-3 gap-8">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         <div className="text-center">
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
                             Seu Aproveitamento
@@ -144,7 +144,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                             <TrendingUp className="size-6 text-emerald-500" strokeWidth={3} />
                           </div>
                         </div>
-                        <div className="text-center border-x-2 border-border">
+                        <div className="text-center md:border-x-2 border-border">
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
                             Média da Turma
                           </p>
