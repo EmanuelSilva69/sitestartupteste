@@ -25,7 +25,7 @@ export function Progress({ value, showLabel = false, className }: ProgressProps)
       )}
       <div className="h-3 w-full bg-secondary/20 rounded-full overflow-hidden border border-border/50">
         <div
-          className="h-full bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-full transition-all duration-500 ease-out shadow-[0_0_12px_rgba(158,127,255,0.4)]"
+          className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500 ease-out shadow-[0_0_12px_rgba(158,127,255,0.4)]"
           style={{ width: `${clampedValue}%` }}
           role="progressbar"
           aria-valuenow={clampedValue}

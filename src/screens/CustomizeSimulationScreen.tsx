@@ -15,6 +15,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { cn } from "../components/ui/utils";
+import { fluidText } from "../lib/fluid-typography";
 
 type QuestionCount = 10 | 20 | 30;
 type GameMode = "training" | "real";
@@ -51,12 +52,12 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4 pointer-events-none" />
 
       {/* Header */}
-      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+      <div className="relative bg-gradient-to-r from-primary to-secondary shadow-2xl shadow-primary/20">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="container mx-auto px-6 py-8 relative">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-6 hover:gap-3"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 hover:gap-3"
           >
             <ArrowLeft className="size-5" />
             <span className="text-sm font-medium">Voltar</span>
@@ -66,8 +67,8 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
               <SlidersHorizontal className="size-7 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-white tracking-tight">Personalizar Simulado</h1>
-              <p className="text-white/80 text-base font-medium">Configure o treino ideal para o seu objetivo de hoje</p>
+              <h1 style={fluidText['3xl']} className="font-black text-white tracking-tight">Personalizar Simulado</h1>
+              <p style={fluidText.base} className="text-white/80 font-medium">Configure o treino ideal para o seu objetivo de hoje</p>
             </div>
           </div>
         </div>
@@ -84,7 +85,7 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
                 <Sparkles className="size-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-foreground">Quantas questões?</h2>
+                <h2 style={fluidText['2xl']} className="font-black text-foreground">Quantas questões?</h2>
                 <p className="text-xs text-muted-foreground">Escolha o volume ideal para sua sessão</p>
               </div>
             </div>
@@ -122,7 +123,7 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
                 <Timer className="size-5 text-secondary" />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-foreground">Modo de Tempo</h2>
+                <h2 style={fluidText['2xl']} className="font-black text-foreground">Modo de Tempo</h2>
                 <p className="text-xs text-muted-foreground">Escolha como deseja treinar</p>
               </div>
             </div>
@@ -156,8 +157,8 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
                   </div>
 
                   <div className="flex-1 pt-1">
-                    <h3 className={cn(
-                      "text-xl font-black transition-colors duration-300",
+                    <h3 style={fluidText.xl} className={cn(
+                      "font-black transition-colors duration-300",
                       gameMode === "training" ? "text-emerald-400" : "text-foreground"
                     )}>
                       Modo Treino
@@ -203,8 +204,8 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
                   </div>
 
                   <div className="flex-1 pt-1">
-                    <h3 className={cn(
-                      "text-xl font-black transition-colors duration-300",
+                    <h3 style={fluidText.xl} className={cn(
+                      "font-black transition-colors duration-300",
                       gameMode === "real" ? "text-primary" : "text-foreground"
                     )}>
                       Simulado Real
@@ -231,7 +232,7 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
                 <BookOpen className="size-5 text-accent" />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-foreground">Filtros de Matéria</h2>
+                <h2 style={fluidText['2xl']} className="font-black text-foreground">Filtros de Matéria</h2>
                 <p className="text-xs text-muted-foreground">Personalize por disciplina</p>
               </div>
             </div>
@@ -271,7 +272,7 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
               disabled={isLoading}
               className={cn(
                 "w-full h-14 md:h-16 text-lg md:text-xl font-black rounded-2xl",
-                "bg-gradient-to-r from-primary via-purple-500 to-secondary",
+                "bg-gradient-to-r from-primary to-secondary",
                 "hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.02]",
                 "active:scale-95",
                 "transition-all duration-300 gap-3",
@@ -290,8 +291,9 @@ export function CustomizeSimulationScreen({ onGenerate, onBack }: CustomizeSimul
 
         {/* Footer Note */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-muted-foreground font-medium">
-            ✨ Seu desempenho será salvo automaticamente
+          <p className="text-xs text-muted-foreground font-medium flex items-center justify-center gap-2">
+            <Sparkles className="size-3" aria-hidden="true" />
+            Seu desempenho será salvo automaticamente
           </p>
         </div>
       </div>

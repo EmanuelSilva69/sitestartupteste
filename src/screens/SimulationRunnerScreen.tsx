@@ -26,6 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../components/ui/alert-dialog";
+import { QuestionCardSkeleton } from "../components/ui/skeleton";
 
 interface SimulationRunnerScreenProps {
   questions: Question[];
@@ -211,13 +212,27 @@ export function SimulationRunnerScreen({
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev: number) => prev - 1);
       mainContentRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      setShowAIExplanation(false);
+      // Se voltar para uma questão já respondida no modo training, ativar feedbackMode
+      if (config.mode === "training" && answers[currentQuestionIndex - 1]?.selectedAlternative) {
+        setFeedbackMode(true);
+      } else {
+        setFeedbackMode(false);
+      }
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, config.mode, answers]);
 
   const handleNavigate = useCallback((index: number) => {
     setCurrentQuestionIndex(index);
     mainContentRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    setShowAIExplanation(false);
+    // Se navegar para uma questão já respondida no modo training, ativar feedbackMode
+    if (config.mode === "training" && answers[index]?.selectedAlternative) {
+      setFeedbackMode(true);
+    } else {
+      setFeedbackMode(false);
+    }
+  }, [config.mode, answers]);
 
   const handleExitClick = () => {
     setShowExitDialog(true);
@@ -277,8 +292,9 @@ export function SimulationRunnerScreen({
                 setIsNavigatorOpen(true);
               }}
               className="gap-2"
+              aria-label="Abrir mapa de navegação entre questões"
             >
-              <Grid3x3 className="size-4" />
+              <Grid3x3 className="size-4" aria-hidden="true" />
               <span className="hidden sm:inline">Mapa</span>
             </Button>
           </div>
@@ -305,18 +321,20 @@ export function SimulationRunnerScreen({
         </div>
       </main>
 
-      {/* Fixed Footer (Actions) */}
-      <footer className={cn("bg-card border-t border-border shadow-2xl z-40", feedbackMode && "hidden")}>
+      {/* Fixed Footer (Actions) - Oculto no modo feedback */}
+      {!feedbackMode && (
+      <footer className="bg-card border-t border-border shadow-2xl z-40">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-4">
             {/* Previous Button */}
             <Button
               variant="outline"
               onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
               className="flex-1 sm:flex-none h-12 gap-2"
+              aria-label={`Voltar para questão ${currentQuestionIndex}. Questão anterior`}
             >
-              <ChevronLeft className="size-5" />
+              <ChevronLeft className="size-5" aria-hidden="true" />
               <span className="hidden sm:inline">Anterior</span>
             </Button>
 
@@ -329,8 +347,10 @@ export function SimulationRunnerScreen({
                 isFlagged && "bg-warning hover:bg-warning/90 text-white"
               )}
               title="Marcar para revisão (Tecla F)"
+              aria-label={isFlagged ? "Remover marcação de revisão desta questão. Tecla de atalho: F" : "Marcar questão para revisar depois. Tecla de atalho: F"}
+              aria-pressed={isFlagged}
             >
-              <Flag className={cn("size-5", isFlagged && "fill-current")} />
+              <Flag className={cn("size-5", isFlagged && "fill-current")} aria-hidden="true" />
               <span className="hidden md:inline">
                 {isFlagged ? "Marcada" : "Marcar"}
               </span>
@@ -342,17 +362,13 @@ export function SimulationRunnerScreen({
               className={cn(
                 "flex-1 sm:flex-none h-12 gap-2",
                 isLastQuestion
-                  ? "bg-gradient-to-r from-primary via-purple-500 to-secondary hover:shadow-xl"
+                  ? "bg-gradient-to-r from-primary to-secondary hover:shadow-xl"
                   : ""
               )}
+              aria-label={isLastQuestion ? "Ir para tela de revisão e entregar simulado" : `Avançar para próxima questão: ${currentQuestionIndex + 2} de ${questions.length}`}
             >
-              <span className="hidden sm:inline">
-                {isLastQuestion ? "Revisar e Entregar" : "Próxima"}
-              </span>
-              <span className="sm:hidden">
-                {isLastQuestion ? "Revisar" : "Próx"}
-              </span>
-              {!isLastQuestion && <ChevronRight className="size-5" />}
+              {isLastQuestion ? "Revisar e Entregar" : "Próxima"}
+              {!isLastQuestion && <ChevronRight className="size-5" aria-hidden="true" />}
             </Button>
           </div>
 
@@ -366,6 +382,7 @@ export function SimulationRunnerScreen({
           </div>
         </div>
       </footer>
+      )}
 
       {/* Question Navigator Sheet */}
       <QuestionNavigator

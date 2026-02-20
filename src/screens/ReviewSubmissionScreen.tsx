@@ -12,6 +12,7 @@ import {
   Clock
 } from "lucide-react";
 import { cn } from "../components/ui/utils";
+import { fluidText } from "../lib/fluid-typography";
 
 interface ReviewSubmissionScreenProps {
   questions: Question[];
@@ -58,19 +59,19 @@ export function ReviewSubmissionScreen({
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.1),transparent)]" />
 
       {/* Header */}
-      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+      <div className="relative bg-gradient-to-r from-primary to-secondary shadow-2xl shadow-primary/20">
         <div className="container mx-auto px-6 py-8">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-6 hover:gap-3"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 hover:gap-3"
           >
             <ArrowLeft className="size-5" />
             <span className="text-sm font-medium">Voltar para prova</span>
           </button>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-black text-white tracking-tight">Revisar e Entregar</h1>
-              <p className="text-white/80 text-base font-medium mt-2">
+              <h1 style={fluidText['3xl']} className="font-black text-foreground tracking-tight">Revisar e Entregar</h1>
+              <p style={fluidText.base} className="text-muted-foreground font-medium mt-2">
                 Confira suas respostas antes de finalizar
               </p>
             </div>
@@ -90,7 +91,7 @@ export function ReviewSubmissionScreen({
       {/* Main Content */}
       <div className="container mx-auto px-6 py-12 max-w-4xl relative">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <Card className="p-6 bg-card border-border/50 shadow-xl">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-emerald-500/20 rounded-xl">
@@ -167,7 +168,7 @@ export function ReviewSubmissionScreen({
                   <Flag className="size-5" />
                   Questões marcadas para revisão ({stats.flagged})
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
                   {flaggedQuestions.map((question) => {
                     const index = questions.findIndex(q => q.id === question.id);
                     return (
@@ -202,13 +203,14 @@ export function ReviewSubmissionScreen({
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-5">
           <Button
             variant="outline"
             onClick={onBack}
             className="flex-1 h-14 text-lg font-bold rounded-xl"
+            aria-label="Voltar para continuar respondendo questões do simulado"
           >
-            <ArrowLeft className="size-5 mr-2" />
+            <ArrowLeft className="size-5 mr-2" aria-hidden="true" />
             Continuar Respondendo
           </Button>
 
@@ -216,12 +218,13 @@ export function ReviewSubmissionScreen({
             onClick={onSubmit}
             className={cn(
               "flex-1 h-14 text-lg font-bold rounded-xl",
-              "bg-gradient-to-r from-primary via-purple-500 to-secondary",
+              "bg-gradient-to-r from-primary to-secondary",
               "hover:shadow-2xl hover:shadow-primary/30 hover:scale-[1.02]",
               "active:scale-95 transition-all duration-300"
             )}
+            aria-label="Finalizar e enviar simulado. Esta ação não pode ser desfeita"
           >
-            <Send className="size-5 mr-2" />
+            <Send className="size-5 mr-2" aria-hidden="true" />
             Finalizar Simulado
           </Button>
         </div>

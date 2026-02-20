@@ -1,10 +1,11 @@
 import React from "react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { CheckCircle, XCircle, Circle } from "lucide-react";
+import { CheckCircle, XCircle, Circle, Sparkles } from "lucide-react";
 import { cn } from "./ui/utils";
 import { Question, Alternative } from "../types/simulation";
 import { Button } from "./ui/button";
+import { fluidText } from "../lib/fluid-typography";
 
 interface QuestionCardProps {
   question: Question;
@@ -40,10 +41,10 @@ export function QuestionCard({
   };
 
   return (
-    <Card className="w-full max-w-4xl mx-auto shadow-2xl border-0 overflow-hidden backdrop-blur-sm bg-card/95 p-8 space-y-6">
+    <Card className="w-full max-w-4xl mx-auto shadow-2xl border-0 overflow-hidden backdrop-blur-sm bg-card/95 p-8 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border/50 pb-4">
-        <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+        <h3 style={fluidText.xl} className="font-bold text-foreground flex items-center gap-2">
           Questão {question.number} <span className="text-muted-foreground">de {totalQuestions}</span>
         </h3>
         <Badge variant="primary" className="text-sm px-3 py-1">
@@ -68,7 +69,7 @@ export function QuestionCard({
       </div>
 
       {/* Footer - Alternatives */}
-      <div className="space-y-3">
+      <div className="space-y-5">
         {question.alternatives.map((alt) => {
           const isSelected = selectedAnswer === alt.id;
           const isCorrectOption = alt.id === correctAnswerId;
@@ -106,7 +107,7 @@ export function QuestionCard({
               onClick={() => handleSelect(alt.id)}
               disabled={disabled || feedbackMode}
               className={cn(
-                "group flex items-start w-full p-5 rounded-xl border-2 transition-all duration-200 text-left",
+                "group flex items-start w-full p-6 rounded-xl border-2 transition-all duration-200 text-left",
                 "hover:scale-[1.01] active:scale-[0.99]",
                 bgColor,
                 feedbackMode && "cursor-default",
@@ -164,7 +165,7 @@ export function QuestionCard({
             variant="outline"
             className="flex-1 gap-2"
           >
-            <span>✨</span>
+            <Sparkles className="size-4" aria-hidden="true" />
             Explicar com IA
           </Button>
           <Button

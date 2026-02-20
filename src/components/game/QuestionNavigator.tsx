@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Answer, Question } from "../../types/simulation";
 import { cn } from "../ui/utils";
 import { CheckCircle2, Flag, Circle, X } from "lucide-react";
+import FocusTrap from "focus-trap-react";
 
 interface QuestionNavigatorProps {
   questions: Question[];
@@ -60,23 +61,39 @@ export function QuestionNavigator({
       />
       
       {/* Modal */}
-      <div className="fixed right-0 top-0 h-screen w-full sm:w-96 bg-background border-l border-border shadow-2xl z-50 p-6 overflow-y-auto animate-in slide-in-from-right">
-        {/* Header com Close Button */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl font-black bg-gradient-to-r from-primary via-purple-500 to-secondary bg-clip-text text-transparent">
-              Mapa da Prova
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">{stats.total} questões</p>
+      <FocusTrap
+        active={isOpen}
+        focusTrapOptions={{
+          initialFocus: false,
+          allowOutsideClick: true,
+          clickOutsideDeactivates: true,
+          returnFocusOnDeactivate: true,
+          escapeDeactivates: true,
+        }}
+      >
+        <div 
+          className="fixed right-0 top-0 h-screen w-full sm:w-96 bg-background border-l border-border shadow-2xl z-50 p-6 overflow-y-auto animate-in slide-in-from-right"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="navigator-title"
+        >
+          {/* Header com Close Button */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 id="navigator-title" className="text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Mapa da Prova
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">{stats.total} questões</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-3 bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 text-primary-foreground rounded-xl transition-all duration-300 flex-shrink-0 active:scale-95"
+              title="Fechar mapa (ESC)"
+              aria-label="Fechar mapa de questões. Tecla de atalho: ESC"
+            >
+              <X className="size-6" aria-hidden="true" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="p-3 bg-gradient-to-r from-primary via-purple-500 to-secondary hover:shadow-lg hover:shadow-primary/50 text-white rounded-xl transition-all duration-300 flex-shrink-0 active:scale-95"
-            title="Fechar mapa (ESC)"
-          >
-            <X className="size-6" />
-          </button>
-        </div>
 
         {/* Progress Bar */}
         <div className="mb-8">
@@ -86,7 +103,7 @@ export function QuestionNavigator({
           </div>
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-primary via-purple-500 to-secondary rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-500"
               style={{ width: `${percentComplete}%` }}
             />
           </div>
@@ -199,6 +216,7 @@ export function QuestionNavigator({
           </div>
         </div>
       </div>
+      </FocusTrap>
     </>
   );
 }

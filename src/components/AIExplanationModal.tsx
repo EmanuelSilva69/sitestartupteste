@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, BookOpen, AlertTriangle, X } from "lucide-react";
 import { cn } from "./ui/utils";
 import { Button } from "./ui/button";
+import { fluidText } from "../lib/fluid-typography";
+import FocusTrap from "focus-trap-react";
 
 interface AIExplanationModalProps {
   isOpen: boolean;
@@ -136,21 +138,37 @@ export function AIExplanationModal({
       />
 
       {/* Modal */}
-      <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-background border-l border-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-background">
-          <div className="flex items-center gap-2">
-            <Sparkles className="size-5 text-primary" />
-            <h3 className="font-bold text-foreground">Análise do Tutor</h3>
+      <FocusTrap
+        active={isOpen}
+        focusTrapOptions={{
+          initialFocus: false,
+          allowOutsideClick: true,
+          clickOutsideDeactivates: true,
+          returnFocusOnDeactivate: true,
+          escapeDeactivates: true,
+        }}
+      >
+        <div 
+          className="fixed inset-y-0 right-0 w-full sm:w-96 bg-background border-l border-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-background">
+            <div className="flex items-center gap-2">
+              <Sparkles className="size-5 text-primary" />
+              <h3 id="modal-title" style={fluidText.lg} className="font-bold text-foreground">Análise do Tutor</h3>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              title="Fechar"
+              aria-label="Fechar modal"
+            >
+              <X className="size-5 text-muted-foreground hover:text-foreground" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
-            title="Fechar"
-          >
-            <X className="size-5 text-muted-foreground hover:text-foreground" />
-          </button>
-        </div>
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -339,6 +357,7 @@ export function AIExplanationModal({
           </Button>
         </div>
       </div>
+      </FocusTrap>
     </>
   );
 }

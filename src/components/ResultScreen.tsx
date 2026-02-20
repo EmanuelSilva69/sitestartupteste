@@ -1,6 +1,7 @@
 import { CheckCircle2, XCircle, AlertTriangle, ArrowLeft, ChevronRight, TrendingUp, Sparkles, Trophy, Target } from "lucide-react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { fluidText } from "../lib/fluid-typography";
 
 const mockCandidateData = {
   name: "Maria Silva Santos",
@@ -38,21 +39,21 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
     <div className="min-h-screen w-full bg-background relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.15),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,var(--primary)_0%,transparent_70%)] opacity-15" />
       
       {/* Header */}
-      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+      <div className="relative bg-gradient-to-r from-primary via-primary-light to-secondary shadow-2xl shadow-primary/20">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L2JhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="container mx-auto px-6 py-8 relative">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-2xl">
-              <Sparkles className="size-8 text-white" />
+              <Sparkles className="size-8 text-foreground" />
             </div>
-            <h1 className="text-4xl font-bold text-white tracking-tight">
+            <h1 style={fluidText['3xl']} className="font-bold text-foreground tracking-tight">
               Startplay Simulados
             </h1>
           </div>
-          <p className="text-white/90 text-base ml-14">
+          <p className="text-foreground/90 text-base ml-14">
             Portal de Desempenho e Análise
           </p>
         </div>
@@ -76,18 +77,18 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
             <>
               {/* Success Alert */}
               <Card className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 backdrop-blur-sm overflow-hidden relative">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.2),transparent)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,var(--accent)_0%,transparent_70%)] opacity-20" />
                 <div className="p-5 flex items-start gap-4 relative">
                   <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl shadow-lg shadow-emerald-500/30">
-                    <CheckCircle2 className="size-7 text-white" strokeWidth={2.5} />
+                    <CheckCircle2 className="size-7 text-foreground" strokeWidth={2.5} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-emerald-100 mb-2 flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-foreground mb-2 flex items-center gap-2">
                       <Trophy className="size-5" />
                       Simulado Concluído!
                     </h3>
-                    <p className="text-sm text-emerald-200/90">
-                      ID do Simulado: <span className="font-bold text-white">{inscription}</span>
+                    <p className="text-sm text-muted-foreground">
+                      ID do Simulado: <span className="font-bold text-foreground">{inscription}</span>
                     </p>
                   </div>
                 </div>
@@ -103,7 +104,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                 <div className="p-8 relative">
                   <div className="flex justify-between items-start mb-8">
                     <div className="flex-1">
-                      <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent mb-3">
+                      <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-3">
                         {mockCandidateData.name}
                       </h2>
                       <p className="text-sm text-muted-foreground">
@@ -111,7 +112,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                       </p>
                     </div>
                     <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl px-6 py-3 shadow-lg shadow-emerald-500/30">
-                      <p className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                      <p className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
                         <Trophy className="size-4" />
                         {mockCandidateData.status.toUpperCase()}
                       </p>
@@ -130,7 +131,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
 
                   {/* Stats Grid */}
                   <Card className="bg-gradient-to-br from-muted/50 to-muted/30 border-0 backdrop-blur-sm overflow-hidden relative">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent)]" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,var(--primary)_0%,transparent_70%)] opacity-10" />
                     <div className="p-6 relative">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                         <div className="text-center">
@@ -186,7 +187,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                   <div className="relative mb-8">
                     <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-full blur-2xl" />
                     <div className="relative bg-gradient-to-br from-yellow-500 to-orange-600 rounded-3xl p-8 shadow-2xl shadow-yellow-500/30">
-                      <AlertTriangle className="size-24 text-white" strokeWidth={2} />
+                      <AlertTriangle className="size-24 text-foreground" strokeWidth={2} />
                     </div>
                   </div>
                   <h2 className="text-4xl font-bold bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent mb-5">
@@ -205,7 +206,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                   </p>
                   <Button
                     onClick={onBackToSearch}
-                    className="rounded-full px-10 h-14 text-lg shadow-2xl bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-primary/40 font-bold"
+                    className="rounded-full px-10 h-14 text-lg shadow-2xl bg-gradient-to-r from-primary via-primary-light to-secondary hover:shadow-primary/40 font-bold"
                   >
                     <ArrowLeft className="size-5 mr-2" />
                     Tentar Outro ID
@@ -224,7 +225,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                   <div className="relative mb-8">
                     <div className="absolute inset-0 bg-gradient-to-br from-red-500/30 to-rose-500/30 rounded-full blur-2xl" />
                     <div className="relative bg-gradient-to-br from-red-500 to-rose-600 rounded-3xl p-8 shadow-2xl shadow-red-500/30">
-                      <XCircle className="size-24 text-white" strokeWidth={2} />
+                      <XCircle className="size-24 text-foreground" strokeWidth={2} />
                     </div>
                   </div>
                   <h2 className="text-4xl font-bold bg-gradient-to-r from-red-500 to-rose-600 bg-clip-text text-transparent mb-5">
@@ -246,7 +247,7 @@ export function ResultScreen({ inscription, onBackToSearch, onViewDetails }: Res
                     </Button>
                     <Button
                       onClick={() => window.location.reload()}
-                      className="rounded-full px-10 h-14 text-lg shadow-2xl bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-primary/40 font-bold"
+                      className="rounded-full px-10 h-14 text-lg shadow-2xl bg-gradient-to-r from-primary via-primary-light to-secondary hover:shadow-primary/40 font-bold"
                     >
                       Tentar Novamente
                     </Button>

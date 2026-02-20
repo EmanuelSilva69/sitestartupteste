@@ -1,6 +1,7 @@
 import { ArrowLeft, User, BookOpen, BarChart3, Award, Download, History, TrendingUp, Sparkles, Trophy, Target, Zap, Clock, Star, Flame, GraduationCap, Battery, Map, Gauge, Crown } from "lucide-react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
+import { fluidText } from "../lib/fluid-typography";
 
 const mockDetailedData = {
   name: "Maria Silva Santos",
@@ -238,18 +239,18 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.15),transparent)]" />
       
       {/* Header */}
-      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+      <div className="relative bg-gradient-to-r from-primary to-secondary shadow-2xl shadow-primary/20">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L2JhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="container mx-auto px-6 py-8 relative">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-2xl">
-              <Sparkles className="size-8 text-white" />
+              <Sparkles className="size-8 text-foreground" />
             </div>
-            <h1 className="text-4xl font-bold text-white tracking-tight">
+            <h1 style={fluidText['3xl']} className="font-bold text-foreground tracking-tight">
               Startplay Simulados
             </h1>
           </div>
-          <p className="text-white/90 text-base ml-14">
+          <p className="text-foreground/90 text-base ml-14">
             Portal de Desempenho e Análise
           </p>
         </div>
@@ -275,10 +276,10 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
               <div className="flex flex-col md:flex-row items-start justify-between mb-6 md:mb-10 gap-4">
                 <div className="flex items-start gap-4 md:gap-6 w-full md:w-auto">
                   <div className="p-3 md:p-5 bg-gradient-to-br from-primary to-secondary rounded-2xl md:rounded-3xl shadow-2xl shadow-primary/30">
-                    <User className="size-8 md:size-12 text-white" strokeWidth={2} />
+                    <User className="size-8 md:size-12 text-foreground" strokeWidth={2} />
                   </div>
                   <div className="flex-1">
-                    <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent mb-2 md:mb-3">
+                    <h1 className="text-2xl md:text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2 md:mb-3">
                       {mockDetailedData.name}
                     </h1>
                     <p className="text-base text-muted-foreground flex items-center gap-2">
@@ -287,8 +288,11 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                     </p>
                   </div>
                 </div>
-                <Button className="rounded-full shadow-xl h-10 md:h-12 text-sm md:text-base bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-2xl hover:shadow-primary/40 font-bold w-full md:w-auto">
-                  <Download className="size-4 mr-2" />
+                <Button 
+                  className="rounded-full shadow-xl h-10 md:h-12 text-sm md:text-base bg-gradient-to-r from-primary to-secondary hover:shadow-2xl hover:shadow-primary/40 font-bold w-full md:w-auto"
+                  aria-label="Baixar arquivo PDF com todas as questões e respostas do simulado"
+                >
+                  <Download className="size-4 mr-2" aria-hidden="true" />
                   <span className="hidden sm:inline">Baixar PDF de Questões</span>
                   <span className="sm:hidden">PDF</span>
                 </Button>
@@ -399,7 +403,7 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                         <Trophy className="size-4 md:size-5" />
                         Seu Status
                       </p>
-                      <p className="text-3xl md:text-5xl font-black text-white flex items-center gap-2 md:gap-3">
+                      <p className="text-3xl md:text-5xl font-black text-foreground flex items-center gap-2 md:gap-3">
                         {mockDetailedData.status.toUpperCase()}
                         <TrendingUp className="size-6 md:size-10 text-emerald-300" strokeWidth={3} />
                       </p>
@@ -408,7 +412,7 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                       <p className="text-sm md:text-base font-bold text-emerald-200 mb-2 md:mb-3">
                         Seu Ranking
                       </p>
-                      <p className="text-5xl md:text-7xl font-black text-white">
+                      <p className="text-5xl md:text-7xl font-black text-foreground">
                         {mockDetailedData.ranking}º
                       </p>
                       <p className="text-xs md:text-sm text-emerald-200 mt-1 md:mt-2">
@@ -442,10 +446,10 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                 </Card>
                 <Card className="bg-gradient-to-br from-emerald-500/20 to-green-500/20 border-2 border-emerald-500/30 shadow-lg shadow-emerald-500/20">
                   <div className="p-6 text-center">
-                    <p className="text-xs font-bold text-emerald-200 uppercase tracking-widest mb-4">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4">
                       Diferença
                     </p>
-                    <p className="text-6xl font-black text-emerald-100">
+                    <p className="text-6xl font-black text-foreground">
                       +{(mockDetailedData.aproveitamentoFinal - mockDetailedData.mediaTurma).toFixed(1)}%
                     </p>
                   </div>
@@ -462,17 +466,17 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
               <div className="flex flex-col md:flex-row items-center md:items-center justify-between mb-8 gap-4">
                 <div className="flex items-center gap-4 text-center md:text-left">
                   <div className="p-3 md:p-4 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-2xl shadow-primary/50">
-                    <Sparkles className="size-6 md:size-8 text-white" />
+                    <Sparkles className="size-6 md:size-8 text-foreground" />
                   </div>
                   <div>
-                    <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
+                    <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                       Status do Concurseiro
                     </h2>
                     <p className="text-xs md:text-sm text-muted-foreground mt-1">Análise gamificada do seu desempenho</p>
                   </div>
                 </div>
                 <div className="text-center md:text-right">
-                  <div className="relative p-4 md:p-6 bg-gradient-to-br from-primary/30 to-secondary/30 border-2 border-primary/50 rounded-3xl overflow-visible group hover:border-secondary/50 transition-all duration-500 min-w-max">
+                  <div className="relative p-6 md:p-8 bg-gradient-to-br from-primary/30 to-secondary/30 border-2 border-primary/50 rounded-3xl overflow-visible group hover:border-secondary/50 transition-all duration-500 min-w-max">
                     {/* Glow Background */}
                     <div className="absolute inset-0 bg-gradient-to-r from-primary via-transparent to-secondary opacity-0 group-hover:opacity-50 transition-opacity duration-500 blur-xl" />
                     <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-pulse" />
@@ -481,9 +485,9 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                     {/* Content */}
                     <div className="relative z-10 text-center">
                       {/* Crown Icon */}
-                      <div className="flex justify-center mb-2">
-                        <div className="p-2 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full shadow-2xl shadow-yellow-500/50 animate-bounce">
-                          <Crown className="size-5 text-white" fill="white" />
+                      <div className="flex justify-center mb-3">
+                        <div className="p-3 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full shadow-2xl shadow-yellow-500/50 animate-bounce">
+                          <Crown className="size-7 text-foreground" fill="currentColor" />
                         </div>
                       </div>
                       
@@ -491,7 +495,7 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                       
                       {/* Level Number */}
                       <div className="relative mb-1">
-                        <p className="font-black text-white drop-shadow-2xl text-6xl md:text-8xl" style={{
+                        <p className="font-black text-foreground drop-shadow-2xl text-6xl md:text-8xl" style={{
                           lineHeight: '0.9',
                           textShadow: '0 0 30px rgba(139, 92, 246, 0.8), 0 0 60px rgba(236, 72, 153, 0.6)'
                         }}>
@@ -539,11 +543,11 @@ export function DetailedProfile({ inscription, onBack }: DetailedProfileProps) {
                     ];
 
                     return (
-                      <div key={name} className="space-y-2">
+                      <div key={name} className="space-y-1">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div 
-                              className="p-2 rounded-lg text-white"
+                              className="p-2 rounded-lg text-primary-foreground"
                               style={{
                                 background: `linear-gradient(135deg, ${colorGradients[idx].start}, ${colorGradients[idx].end})`
                               }}

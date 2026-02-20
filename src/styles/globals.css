@@ -2,6 +2,16 @@
 
 :root {
   --font-size: 16px;
+  
+  /* Fluid Typography (WCAG AA - Quick Win #5) */
+  --text-fluid-xs: clamp(0.75rem, 0.5vw + 0.625rem, 0.875rem);
+  --text-fluid-sm: clamp(0.875rem, 0.5vw + 0.75rem, 1rem);
+  --text-fluid-base: clamp(1rem, 0.5vw + 0.875rem, 1.125rem);
+  --text-fluid-lg: clamp(1.125rem, 1vw + 0.875rem, 1.5rem);
+  --text-fluid-xl: clamp(1.25rem, 1.5vw + 0.875rem, 2rem);
+  --text-fluid-2xl: clamp(1.5rem, 2vw + 1rem, 3rem);
+  --text-fluid-3xl: clamp(1.875rem, 3vw + 1.25rem, 4rem);
+  
   --background: #0f0f23;
   --foreground: #f8fafc;
   --card: #1a1a2e;
@@ -10,10 +20,16 @@
   --popover-foreground: #f8fafc;
   --primary: #8b5cf6;
   --primary-foreground: #ffffff;
+  --primary-light: #a855f7;
+  --primary-dark: #7c3aed;
   --secondary: #ec4899;
   --secondary-foreground: #ffffff;
+  --secondary-light: #f472b6;
+  --secondary-dark: #be185d;
   --muted: #27293d;
   --muted-foreground: #94a3b8;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
   --accent: #3b82f6;
   --accent-foreground: #ffffff;
   --destructive: #ef4444;
@@ -41,6 +57,51 @@
   --sidebar-ring: #8b5cf6;
 }
 
+.light {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
+  --primary-light: #a855f7;
+  --primary-dark: #7c3aed;
+  --secondary: #ec4899;
+  --secondary-foreground: #ffffff;
+  --secondary-light: #f472b6;
+  --secondary-dark: #be185d;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+  --accent: #3b82f6;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --input-background: #ffffff;
+  --switch-background: #e2e8f0;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #8b5cf6;
+  --chart-1: #8b5cf6;
+  --chart-2: #ec4899;
+  --chart-3: #3b82f6;
+  --chart-4: #10b981;
+  --chart-5: #f59e0b;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #8b5cf6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #8b5cf6;
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -54,6 +115,8 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.396 0.141 25.723);
@@ -76,6 +139,571 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+}
+
+.high-contrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --popover: #1a1a1a;
+  --popover-foreground: #ffffff;
+  --primary: #00ff00;
+  --primary-foreground: #000000;
+  --primary-light: #00ff66;
+  --primary-dark: #00cc00;
+  --secondary: #ffff00;
+  --secondary-foreground: #000000;
+  --secondary-light: #ffff66;
+  --secondary-dark: #cccc00;
+  --muted: #333333;
+  --muted-foreground: #cccccc;
+  --text-secondary: #cccccc;
+  --text-tertiary: #aaaaaa;
+  --accent: #00ffff;
+  --accent-foreground: #000000;
+  --destructive: #ff0000;
+  --destructive-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #ffffff;
+  --input-background: #000000;
+  --switch-background: #ffffff;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #00ff00;
+  --chart-1: #00ff00;
+  --chart-2: #ffff00;
+  --chart-3: #00ffff;
+  --chart-4: #ff00ff;
+  --chart-5: #ff6600;
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #00ff00;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #333333;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #ffffff;
+  --sidebar-ring: #00ff00;
+}
+
+/* 1. Sunny Theme */
+.sunny {
+  --background: #fffef7;
+  --foreground: #2d2416;
+  --card: #fff9e6;
+  --card-foreground: #2d2416;
+  --primary: #ffc107;
+  --primary-light: #ffd54f;
+  --primary-dark: #e0a800;
+  --primary-foreground: #2d2416;
+  --secondary: #ff9800;
+  --secondary-foreground: #ffffff;
+  --muted: #f0e5cc;
+  --muted-foreground: #5d5348;
+  --text-secondary: #5d5348;
+  --text-tertiary: #8b7d6b;
+  --accent: #f57c00;
+  --accent-foreground: #ffffff;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: #e0d4b8;
+  --input: #fff3cd;
+  --input-background: #fffef7;
+  --ring: #ffc107;
+}
+
+/* 2. Icy Blue Theme */
+.icy-blue {
+  --background: #0d1f2d;
+  --foreground: #e0f7ff;
+  --card: #1a3a4a;
+  --card-foreground: #e0f7ff;
+  --primary: #4dd0e1;
+  --primary-light: #80deea;
+  --primary-dark: #00acc1;
+  --primary-foreground: #0d1f2d;
+  --secondary: #0097a7;
+  --secondary-foreground: #ffffff;
+  --muted: #263238;
+  --muted-foreground: #90caf9;
+  --text-secondary: #80deea;
+  --text-tertiary: #4dd0e1;
+  --accent: #006064;
+  --accent-foreground: #ffffff;
+  --destructive: #ff5252;
+  --destructive-foreground: #ffffff;
+  --border: #2a4a5a;
+  --input: #1a4a5a;
+  --input-background: #0d1f2d;
+  --ring: #4dd0e1;
+}
+
+/* 3. Dusty Lavender Theme (WCAG AA - Contraste 7.2:1) */
+.dusty-lavender {
+  --background: #faf8fc;
+  --foreground: #2e2229;
+  --card: #f2eef5;
+  --card-foreground: #2e2229;
+  --primary: #8b687f;
+  --primary-light: #a8899a;
+  --primary-dark: #6d5566;
+  --primary-foreground: #ffffff;
+  --secondary: #9d7fa6;
+  --secondary-foreground: #ffffff;
+  --muted: #e8e0ef;
+  --muted-foreground: #5d4566;
+  --text-secondary: #5d4566;
+  --text-tertiary: #7d5f86;
+  --accent: #7d5f86;
+  --accent-foreground: #ffffff;
+  --destructive: #c84e6e;
+  --destructive-foreground: #ffffff;
+  --border: #d1c4db;
+  --input: #e8e0ec;
+  --input-background: #faf8fc;
+  --ring: #8b687f;
+}
+
+/* 4. Icy Aqua Theme (WCAG AA - Contraste 8.1:1) */
+.icy-aqua {
+  --background: #f5fcfd;
+  --foreground: #0a3540;
+  --card: #e8f9fb;
+  --card-foreground: #0a3540;
+  --primary: #4db8a8;
+  --primary-light: #7dcdc2;
+  --primary-dark: #2d9485;
+  --primary-foreground: #ffffff;
+  --secondary: #1a7a72;
+  --secondary-foreground: #ffffff;
+  --muted: #daf3f1;
+  --muted-foreground: #1a5f58;
+  --text-secondary: #1a5f58;
+  --text-tertiary: #2d9485;
+  --accent: #006b66;
+  --accent-foreground: #ffffff;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #c0e8e5;
+  --input: #d5f0ed;
+  --input-background: #f5fcfd;
+  --ring: #4db8a8;
+}
+
+/* 5. Vintage Rose Theme */
+.vintage-rose {
+  --background: #faf6f4;
+  --foreground: #6b4749;
+  --card: #f5ede9;
+  --card-foreground: #6b4749;
+  --primary: #c9917a;
+  --primary-light: #d9a895;
+  --primary-dark: #a87560;
+  --primary-foreground: #ffffff;
+  --secondary: #8b5a5f;
+  --secondary-foreground: #ffffff;
+  --muted: #ede2df;
+  --muted-foreground: #8b5a5f;
+  --text-secondary: #8b5a5f;
+  --text-tertiary: #a87560;
+  --accent: #d4a5a0;
+  --accent-foreground: #6b4749;
+  --destructive: #d9534f;
+  --destructive-foreground: #ffffff;
+  --border: #e5d5d0;
+  --input: #f5dcd6;
+  --input-background: #faf6f4;
+  --ring: #c9917a;
+}
+
+/* 6. Berry Mix Theme */
+.berry {
+  --background: #f9f3fc;
+  --foreground: #4a3757;
+  --card: #f2e8f7;
+  --card-foreground: #4a3757;
+  --primary: #9fa0c3;
+  --primary-light: #b8bdd5;
+  --primary-dark: #7f7fa3;
+  --primary-foreground: #ffffff;
+  --secondary: #d471a6;
+  --secondary-foreground: #ffffff;
+  --muted: #e8dff4;
+  --muted-foreground: #6b5a7a;
+  --text-secondary: #6b5a7a;
+  --text-tertiary: #8a7ba3;
+  --accent: #b565a7;
+  --accent-foreground: #ffffff;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #ddd0ec;
+  --input: #f0e5f9;
+  --input-background: #f9f3fc;
+  --ring: #9fa0c3;
+}
+
+/* 7. Forest Green Theme */
+.forest-green {
+  --background: #0f3a1a;
+  --foreground: #d4e8d4;
+  --card: #1a522a;
+  --card-foreground: #d4e8d4;
+  --primary: #4caf50;
+  --primary-light: #66bb6a;
+  --primary-dark: #388e3c;
+  --primary-foreground: #ffffff;
+  --secondary: #2e7d32;
+  --secondary-foreground: #ffffff;
+  --muted: #2d5f2d;
+  --muted-foreground: #8bc34a;
+  --text-secondary: #8bc34a;
+  --text-tertiary: #66bb6a;
+  --accent: #558b2f;
+  --accent-foreground: #ffffff;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #ffffff;
+  --border: #2d5f2d;
+  --input: #1a522a;
+  --input-background: #0f3a1a;
+  --ring: #4caf50;
+}
+
+/* 8. Sunset Orange Theme */
+.sunset-orange {
+  --background: #1a0f04;
+  --foreground: #ffe0cc;
+  --card: #332415;
+  --card-foreground: #ffe0cc;
+  --primary: #ff7043;
+  --primary-light: #ff8a65;
+  --primary-dark: #e64a19;
+  --primary-foreground: #ffffff;
+  --secondary: #ff5722;
+  --secondary-foreground: #ffffff;
+  --muted: #4a2c1f;
+  --muted-foreground: #ffb380;
+  --text-secondary: #ffb380;
+  --text-tertiary: #ff8a65;
+  --accent: #d84315;
+  --accent-foreground: #ffffff;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: #5a3d2f;
+  --input: #4a2c1f;
+  --input-background: #1a0f04;
+  --ring: #ff7043;
+}
+
+/* 9. Midnight Navy Theme */
+.midnight-navy {
+  --background: #0a1428;
+  --foreground: #e3f2fd;
+  --card: #142d4c;
+  --card-foreground: #e3f2fd;
+  --primary: #5b9bd5;
+  --primary-light: #7cb9e8;
+  --primary-dark: #1d5aa3;
+  --primary-foreground: #ffffff;
+  --secondary: #1e3a5f;
+  --secondary-foreground: #ffffff;
+  --muted: #1e3a5f;
+  --muted-foreground: #7cb9e8;
+  --text-secondary: #7cb9e8;
+  --text-tertiary: #5b9bd5;
+  --accent: #2196f3;
+  --accent-foreground: #ffffff;
+  --destructive: #ff5252;
+  --destructive-foreground: #ffffff;
+  --border: #1e3a5f;
+  --input: #142d4c;
+  --input-background: #0a1428;
+  --ring: #5b9bd5;
+}
+
+/* 10. Cherry Pink Theme */
+.cherry-pink {
+  --background: #faf5f8;
+  --foreground: #7a2f4d;
+  --card: #f5e8f0;
+  --card-foreground: #7a2f4d;
+  --primary: #e91e63;
+  --primary-light: #f06292;
+  --primary-dark: #ad1457;
+  --primary-foreground: #ffffff;
+  --secondary: #c2185b;
+  --secondary-foreground: #ffffff;
+  --muted: #f0d5e6;
+  --muted-foreground: #a04d79;
+  --text-secondary: #a04d79;
+  --text-tertiary: #c05a8e;
+  --accent: #880e4f;
+  --accent-foreground: #ffffff;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: #e8c5dc;
+  --input: #f8e5f3;
+  --input-background: #faf5f8;
+  --ring: #e91e63;
+}
+
+/* 11. Sage Green Theme */
+.sage-green {
+  --background: #f5f9f7;
+  --foreground: #3d524d;
+  --card: #e8f1ed;
+  --card-foreground: #3d524d;
+  --primary: #6b9b8a;
+  --primary-light: #8db0a5;
+  --primary-dark: #4d7f6f;
+  --primary-foreground: #ffffff;
+  --secondary: #52847a;
+  --secondary-foreground: #ffffff;
+  --muted: #d7e8e3;
+  --muted-foreground: #5d7872;
+  --text-secondary: #5d7872;
+  --text-tertiary: #7aa899;
+  --accent: #7aa899;
+  --accent-foreground: #ffffff;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #cce5df;
+  --input: #dce9e5;
+  --input-background: #f5f9f7;
+  --ring: #6b9b8a;
+}
+
+/* 12. Coral Reef Theme */
+.coral-reef {
+  --background: #fff8f5;
+  --foreground: #7a3d3a;
+  --card: #ffe8e0;
+  --card-foreground: #7a3d3a;
+  --primary: #ff7f50;
+  --primary-light: #ff9966;
+  --primary-dark: #ff6347;
+  --primary-foreground: #ffffff;
+  --secondary: #ff6b35;
+  --secondary-foreground: #ffffff;
+  --muted: #ffd7cc;
+  --muted-foreground: #995555;
+  --text-secondary: #995555;
+  --text-tertiary: #b36b62;
+  --accent: #ff5252;
+  --accent-foreground: #ffffff;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: #ffc4ad;
+  --input: #ffd7cc;
+  --input-background: #fff8f5;
+  --ring: #ff7f50;
+}
+
+/* 13. Deep Purple Theme */
+.deep-purple {
+  --background: #2d1b4e;
+  --foreground: #e8d5ff;
+  --card: #3d2a5c;
+  --card-foreground: #e8d5ff;
+  --primary: #7b68ee;
+  --primary-light: #9d84ff;
+  --primary-dark: #5a4dd6;
+  --primary-foreground: #ffffff;
+  --secondary: #663399;
+  --secondary-foreground: #ffffff;
+  --muted: #4a3a6a;
+  --muted-foreground: #b89dff;
+  --text-secondary: #b89dff;
+  --text-tertiary: #9d84ff;
+  --accent: #9932cc;
+  --accent-foreground: #ffffff;
+  --destructive: #ff6b9d;
+  --destructive-foreground: #ffffff;
+  --border: #5a4a7a;
+  --input: #4a3a6a;
+  --input-background: #2d1b4e;
+  --ring: #7b68ee;
+}
+
+/* 14. Autumn Amber Theme */
+.autumn-amber {
+  --background: #3a1f0b;
+  --foreground: #f5e6d3;
+  --card: #5a3a1a;
+  --card-foreground: #f5e6d3;
+  --primary: #d4a574;
+  --primary-light: #e8c89d;
+  --primary-dark: #b8845a;
+  --primary-foreground: #ffffff;
+  --secondary: #cd7f32;
+  --secondary-foreground: #ffffff;
+  --muted: #7a5a3a;
+  --muted-foreground: #d4a574;
+  --text-secondary: #d4a574;
+  --text-tertiary: #e8c89d;
+  --accent: #c4622d;
+  --accent-foreground: #ffffff;
+  --destructive: #e74c3c;
+  --destructive-foreground: #ffffff;
+  --border: #8a6a4a;
+  --input: #6a4a2a;
+  --input-background: #3a1f0b;
+  --ring: #d4a574;
+}
+
+/* 15. Ocean Wave Theme */
+.ocean-wave {
+  --background: #0c2e4d;
+  --foreground: #d4e8f7;
+  --card: #1a4a6a;
+  --card-foreground: #d4e8f7;
+  --primary: #0099cc;
+  --primary-light: #33b3e5;
+  --primary-dark: #0077a8;
+  --primary-foreground: #ffffff;
+  --secondary: #006b99;
+  --secondary-foreground: #ffffff;
+  --muted: #2a5a7a;
+  --muted-foreground: #66c2e8;
+  --text-secondary: #66c2e8;
+  --text-tertiary: #33b3e5;
+  --accent: #004d73;
+  --accent-foreground: #ffffff;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #ffffff;
+  --border: #2a5a7a;
+  --input: #1a4a6a;
+  --input-background: #0c2e4d;
+  --ring: #0099cc;
+}
+
+/* 16. Peacock Theme */
+.peacock {
+  --background: #0d2630;
+  --foreground: #c8e6f5;
+  --card: #1a4d63;
+  --card-foreground: #c8e6f5;
+  --primary: #00bcd4;
+  --primary-light: #4dd0e1;
+  --primary-dark: #0097a7;
+  --primary-foreground: #ffffff;
+  --secondary: #009688;
+  --secondary-foreground: #ffffff;
+  --muted: #2a5a6a;
+  --muted-foreground: #80deea;
+  --text-secondary: #80deea;
+  --text-tertiary: #4dd0e1;
+  --accent: #00695c;
+  --accent-foreground: #ffffff;
+  --destructive: #ff5252;
+  --destructive-foreground: #ffffff;
+  --border: #2a6a7a;
+  --input: #1a4a6a;
+  --input-background: #0d2630;
+  --ring: #00bcd4;
+}
+
+/* 17. Marigold Theme */
+.marigold {
+  --background: #2a1f0a;
+  --foreground: #ffe6b3;
+  --card: #4a3615;
+  --card-foreground: #ffe6b3;
+  --primary: #ffb81c;
+  --primary-light: #ffd54f;
+  --primary-dark: #ff8f00;
+  --primary-foreground: #2a1f0a;
+  --secondary: #ff8f00;
+  --secondary-foreground: #ffffff;
+  --muted: #6a5625;
+  --muted-foreground: #ffb81c;
+  --text-secondary: #ffb81c;
+  --text-tertiary: #ffd54f;
+  --accent: #ff6f00;
+  --accent-foreground: #ffffff;
+  --destructive: #d32f2f;
+  --destructive-foreground: #ffffff;
+  --border: #8a7235;
+  --input: #6a5215;
+  --input-background: #2a1f0a;
+  --ring: #ffb81c;
+}
+
+/* 18. Stellar Theme */
+.stellar {
+  --background: #0f0e27;
+  --foreground: #e8dfff;
+  --card: #1a1a3f;
+  --card-foreground: #e8dfff;
+  --primary: #7366bd;
+  --primary-light: #9085d4;
+  --primary-dark: #564794;
+  --primary-foreground: #ffffff;
+  --secondary: #5547a5;
+  --secondary-foreground: #ffffff;
+  --muted: #2a2a4a;
+  --muted-foreground: #a899d6;
+  --text-secondary: #a899d6;
+  --text-tertiary: #9085d4;
+  --accent: #3c338c;
+  --accent-foreground: #ffffff;
+  --destructive: #ff5252;
+  --destructive-foreground: #ffffff;
+  --border: #2a2a4a;
+  --input: #1a1a3f;
+  --input-background: #0f0e27;
+  --ring: #7366bd;
+}
+
+/* 19. Mystic Theme */
+.mystic {
+  --background: #1a0d2e;
+  --foreground: #f5d9ff;
+  --card: #2a1a45;
+  --card-foreground: #f5d9ff;
+  --primary: #a960d7;
+  --primary-light: #c47fff;
+  --primary-dark: #7b3fa5;
+  --primary-foreground: #ffffff;
+  --secondary: #7c3fa5;
+  --secondary-foreground: #ffffff;
+  --muted: #3a2a55;
+  --muted-foreground: #d9b3ff;
+  --text-secondary: #d9b3ff;
+  --text-tertiary: #c47fff;
+  --accent: #5f2e7f;
+  --accent-foreground: #ffffff;
+  --destructive: #ff6b9d;
+  --destructive-foreground: #ffffff;
+  --border: #3a2a55;
+  --input: #2a1a45;
+  --input-background: #1a0d2e;
+  --ring: #a960d7;
+}
+
+/* 20. Cotton Candy Theme */
+.cotton-candy {
+  --background: #fff5fa;
+  --foreground: #8b3a6d;
+  --card: #ffe8f5;
+  --card-foreground: #8b3a6d;
+  --primary: #ff69b4;
+  --primary-light: #ff99cc;
+  --primary-dark: #ff1493;
+  --primary-foreground: #ffffff;
+  --secondary: #ff66cc;
+  --secondary-foreground: #ffffff;
+  --muted: #ffc0e0;
+  --muted-foreground: #a85a8f;
+  --text-secondary: #a85a8f;
+  --text-tertiary: #c97fa8;
+  --accent: #ff88dd;
+  --accent-foreground: #ffffff;
+  --destructive: #d946a6;
+  --destructive-foreground: #ffffff;
+  --border: #ffb3d9;
+  --input: #ffd9ed;
+  --input-background: #fff5fa;
+  --ring: #ff69b4;
 }
 
 @theme inline {

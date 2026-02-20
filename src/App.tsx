@@ -8,6 +8,7 @@ import { SimulationRunnerScreen } from './screens/SimulationRunnerScreen';
 import { ReviewSubmissionScreen } from './screens/ReviewSubmissionScreen';
 import { mockQuestions } from './data/mockQuestions';
 import { SimulationConfig, Answer } from './types/simulation';
+import { ThemeSelector } from './components/ui/theme-selector';
 
 type Screen = 'login' | 'customize' | 'runner' | 'review' | 'processing' | 'result' | 'profile';
 
@@ -105,6 +106,13 @@ export default function App() {
 
   return (
     <main className="min-h-screen bg-background text-foreground font-sans antialiased">
+      {/* Theme Selector - Premium Floating Button */}
+      <div className="fixed top-6 right-6 z-50">
+        <div className="backdrop-blur-md bg-card/30 border border-border/40 rounded-full p-2 shadow-2xl shadow-primary/20 hover:shadow-primary/30 transition-all duration-300 hover:border-border/60 hover:bg-card/40">
+          <ThemeSelector variant="button" className="rounded-full size-11 hover:bg-primary/20 transition-colors duration-200" />
+        </div>
+      </div>
+
       {currentScreen === 'login' && (
         <ConsultationForm 
           onSubmit={handleLoginSuccess}

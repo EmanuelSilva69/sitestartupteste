@@ -4,6 +4,7 @@ import { Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
+import { fluidText } from "../lib/fluid-typography";
 
 interface ConsultationFormProps {
   onSubmit: (inscription: string) => void;
@@ -28,21 +29,21 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
     <div className="min-h-screen w-full bg-background relative overflow-hidden">
       {/* Animated Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-secondary/20" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(139,92,246,0.1),transparent)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,var(--primary)_0%,transparent_70%)] opacity-10" />
       
       {/* Header with Gradient */}
-      <div className="relative bg-gradient-to-r from-primary via-purple-600 to-secondary shadow-2xl shadow-primary/20">
+      <div className="relative bg-gradient-to-r from-primary via-primary-light to-secondary shadow-2xl shadow-primary/20">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L2JhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCIvPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
         <div className="container mx-auto px-6 py-8 relative">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-2xl">
-              <Sparkles className="size-8 text-white" />
+              <Sparkles className="size-8 text-foreground" />
             </div>
-            <h1 className="text-4xl font-bold text-white tracking-tight">
+            <h1 style={fluidText['3xl']} className="font-bold text-foreground tracking-tight">
               Startplay Simulados
             </h1>
           </div>
-          <p className="text-white/90 text-base ml-14">
+          <p style={fluidText.base} className="text-foreground/90 ml-14">
             Portal de Desempenho e Análise
           </p>
         </div>
@@ -57,10 +58,10 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
             {/* Title Section */}
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-lg shadow-primary/30">
-                <Search className="size-7 text-white" />
+                <Search className="size-7 text-primary-foreground" />
               </div>
               <div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-400 to-secondary bg-clip-text text-transparent">
+                <h2 style={fluidText['2xl']} className="font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                   Iniciar Consulta
                 </h2>
                 <p className="text-muted-foreground text-sm mt-1">
@@ -88,8 +89,11 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
                   placeholder="Digite o ID da prova (12 dígitos)"
                   className="h-16 text-lg border-2 border-input bg-input-background focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all rounded-2xl font-medium"
                   maxLength={12}
+                  aria-label="Digite seu ID de inscrição do simulado com 12 dígitos"
+                  aria-describedby="inscription-hint"
+                  aria-required="true"
                 />
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 ml-1">
+                <p id="inscription-hint" className="text-xs text-muted-foreground flex items-center gap-1.5 ml-1">
                   <Info className="size-3.5" />
                   Exemplo: 123456789012
                 </p>
@@ -122,7 +126,8 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
               <Button
                 type="submit"
                 disabled={inscription.length !== 12}
-                className="w-full h-16 text-lg rounded-full bg-gradient-to-r from-primary via-purple-600 to-secondary hover:shadow-2xl hover:shadow-primary/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold mt-8 relative overflow-hidden group"
+                className="w-full h-16 text-lg rounded-full bg-gradient-to-r from-primary via-primary-light to-secondary hover:shadow-2xl hover:shadow-primary/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold mt-8 relative overflow-hidden group"
+                aria-label="Consultar resultado do simulado com o ID informado"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <Search className="size-6 mr-3 relative z-10" />
@@ -136,6 +141,7 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
                   onClick={onViewProfile}
                   variant="outline"
                   className="w-full h-12 text-base rounded-full border-2 border-primary/50 hover:bg-primary/10 transition-all font-semibold mt-3"
+                  aria-label="Visualizar perfil completo de desempenho"
                 >
                   <User className="size-5 mr-2" />
                   Ver Perfil Completo
