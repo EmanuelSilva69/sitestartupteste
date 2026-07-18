@@ -9,9 +9,10 @@ import { fluidText } from "../lib/fluid-typography";
 interface ConsultationFormProps {
   onSubmit: (inscription: string) => void;
   onViewProfile?: () => void;
+  onViewTransparency?: () => void;
 }
 
-export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormProps) {
+export function ConsultationForm({ onSubmit, onViewProfile, onViewTransparency }: ConsultationFormProps) {
   const [inscription, setInscription] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -145,6 +146,18 @@ export function ConsultationForm({ onSubmit, onViewProfile }: ConsultationFormPr
                 >
                   <User className="size-5 mr-2" />
                   Ver Perfil Completo
+                </Button>
+              )}
+
+              {/* Transparency Demo Button */}
+              {onViewTransparency && (
+                <Button
+                  type="button"
+                  onClick={onViewTransparency}
+                  variant="ghost"
+                  className="w-full h-10 text-sm rounded-full text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all mt-2"
+                >
+                  🔍 Demo: Camada de Transparência da IA
                 </Button>
               )}
             </form>

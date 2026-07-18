@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Question, Answer, SimulationConfig } from "../types/simulation";
+import { Question, Answer, SimulationConfig, ChatMessage } from "../types/simulation";
 import { QuestionCard } from "../components/QuestionCard";
 import { QuestionNavigator } from "../components/game/QuestionNavigator";
 import { AIExplanationModal } from "../components/AIExplanationModal";
@@ -97,6 +97,7 @@ export function SimulationRunnerScreen({
   const [feedbackMode, setFeedbackMode] = useState(false);
   const [showAIExplanation, setShowAIExplanation] = useState(false);
 
+  const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>({});
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   // Sync question index when coming back from review
@@ -394,11 +395,14 @@ export function SimulationRunnerScreen({
         onNavigate={handleNavigate}
       />
 
-      {/* AI Explanation Modal */}
+      {/* AI Explanation Modal (Chatbot) */}
       <AIExplanationModal
         isOpen={showAIExplanation}
-        onClose={() => setShowAIExplanation(false)}
-        question={currentQuestion.statement}
+        onClose={() => {
+          setShowAIExplanation(false);
+          setChatMessages({});
+        }}
+        question={currentQuestion}
         correctAnswer={
           currentQuestion.alternatives.find(
             alt => alt.id === currentQuestion.correctAnswer
@@ -410,6 +414,12 @@ export function SimulationRunnerScreen({
           )?.text || "N/A"
         }
         isCorrect={currentAnswer.selectedAlternative === currentQuestion.correctAnswer}
+        subject={currentQuestion.subject}
+        messages={chatMessages[currentQuestion.id] || []}
+        questionId={currentQuestion.id}
+        onMessagesUpdate={(msgs) =>
+          setChatMessages((prev) => ({ ...prev, [currentQuestion.id]: msgs }))
+        }
       />
 
       {/* Exit Confirmation Dialog */}

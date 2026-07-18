@@ -35,6 +35,9 @@ Documentação do processo de desenvolvimento, histórico e guias.
 ### 🎨 [Components](./components.md)
 Documentação técnica dos componentes React.
 
+### 📊 [Dashboard de Simulados](./design/README-dashboard.md)
+Documentação do dashboard de simulados para concursos públicos, com exportação de telas em PNG.
+
 ---
 
 ## 🚀 Quick Links

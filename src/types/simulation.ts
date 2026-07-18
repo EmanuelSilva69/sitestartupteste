@@ -38,3 +38,51 @@ export interface SimulationConfig {
   subjects?: string[];
   timestamp: string;
 }
+
+export type DownloadStatus = "idle" | "downloading" | "completed" | "error";
+
+export interface DownloadedFile {
+  id: string;
+  name: string;
+  sourceUrl: string;
+  type: "exam" | "gabarito";
+  mimeType: string;
+  size: number;
+  objectUrl: string;
+  downloadedAt: string;
+}
+
+export interface Citation {
+  text: string;
+  url?: string;
+  source?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  citations?: Citation[];
+  timestamp: number;
+  rating?: "like" | "dislike" | null;
+}
+
+export interface AIProviderConfig {
+  provider: "openai" | "mock";
+  apiKey?: string;
+  model?: string;
+  baseUrl?: string;
+}
+
+export interface AIQuestionContext {
+  question: Question;
+  selectedAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  subject: string;
+}
+
+export interface PerQuestionChat {
+  questionId: string;
+  messages: ChatMessage[];
+}

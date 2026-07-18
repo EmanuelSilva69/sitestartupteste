@@ -1,88 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { Sparkles, BookOpen, AlertTriangle, X } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Sparkles,
+  X,
+  Send,
+  ThumbsUp,
+  ThumbsDown,
+  ExternalLink,
+  Loader2,
+  AlertCircle,
+  Bot,
+  User,
+  CheckCircle2,
+  XCircle,
+  BookOpen,
+} from "lucide-react";
 import { cn } from "./ui/utils";
 import { Button } from "./ui/button";
 import { fluidText } from "../lib/fluid-typography";
+import {
+  ChatMessage,
+  Question,
+  Citation,
+  AIQuestionContext,
+} from "../types/simulation";
+import { askAI } from "../lib/ai-service";
+import { setMessageRating, attachRatingsToMessages } from "../lib/ai-storage";
 import FocusTrap from "focus-trap-react";
 
 interface AIExplanationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  question: string;
+  question: Question;
   correctAnswer: string;
   selectedAnswer: string;
   isCorrect: boolean;
+  subject: string;
+  messages: ChatMessage[];
+  questionId: string;
+  onMessagesUpdate: (messages: ChatMessage[]) => void;
 }
 
-type ModalState = "loading" | "success" | "error";
-
-const LOADING_MESSAGES = [
-  "Analisando a questão...",
-  "Consultando base de conhecimento...",
-  "Gerando explicação didática...",
-  "Processando análise profunda...",
-  "Preparando resposta personalizada..."
-];
-
-const MOCK_EXPLANATIONS = [
-  {
-    summary: "Esta alternativa é a mais precisa e abrangente em relação ao tema.",
-    detail: [
-      "A alternativa correta apresenta todos os elementos necessários da definição.",
-      "Ela está em conformidade com a jurisprudência consolidada.",
-      "As outras alternativas contêm erros conceituais ou informações incompletas.",
-      "O conhecimento aqui é aplicável em diversos contextos práticos."
-    ],
-    sources: [
-      { title: "Art. 5º da Constituição Federal", link: "#" },
-      { title: "Jurisprudência STF 2023", link: "#" },
-      { title: "Lei Complementar nº 101/2000", link: "#" }
-    ]
-  },
-  {
-    summary: "A resposta correta integra múltiplos conceitos de forma coerente.",
-    detail: [
-      "Baseia-se nas normas fundamentais do direito administrativo.",
-      "Está alinhada com as melhores práticas internacionais.",
-      "Reflete o entendimento predominante na doutrina especializada.",
-      "Passa no teste de aplicabilidade prática e teórica."
-    ],
-    sources: [
-      { title: "Decreto nº 9.203/2017", link: "#" },
-      { title: "Resolução CNPC nº 1/2018", link: "#" },
-      { title: "Parecer AGU nº 001/2022", link: "#" }
-    ]
-  },
-  {
-    summary: "Pela eliminação de erros, chegamos à resposta correta.",
-    detail: [
-      "As alternativas A e B contêm contradições lógicas.",
-      "A alternativa D apresenta um conceito desatualizado.",
-      "Apenas a alternativa correta contempla todos os requisitos legais.",
-      "Essa é a interpretação confirmada pelos tribunais superiores."
-    ],
-    sources: [
-      { title: "STF - Súmula nº 512", link: "#" },
-      { title: "OAB - Enunciado Nº 432", link: "#" },
-      { title: "ABNT NBR ISO 9001:2015", link: "#" }
-    ]
+function CitationLink({ citation }: { citation: Citation }) {
+  if (!citation.url) {
+    return (
+      <span className="text-xs text-muted-foreground italic">
+        {citation.text}
+      </span>
+    );
   }
-];
+  return (
+    <a
+      href={citation.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-1 text-xs text-primary hover:text-secondary underline underline-offset-2 transition-colors"
+    >
+      {citation.text}
+      <ExternalLink className="size-2.5 shrink-0" />
+    </a>
+  );
+}
 
-const MOCK_ERROR_EXPLANATION = {
-  summary: "Explicação padrão do gabarito oficial.",
-  detail: [
-    "A alternativa correta é a que melhor responde à questão proposta.",
-    "Consulte o material didático para aprofundamento neste tema.",
-    "Recomenda-se revisar os conceitos fundamentais relacionados.",
-    "Pratique mais questões similares para consolidar o aprendizado."
-  ],
-  sources: [
-    { title: "Gabarito Oficial - INEP", link: "#" },
-    { title: "Material de Apoio - Instituição", link: "#" },
-    { title: "Referências Complementares", link: "#" }
-  ]
-};
+function MessageContent({ content, citations }: { content: string; citations?: Citation[] }) {
+  const segments = content.split(/(https?:\/\/[^\s)]+)/g);
+
+  return (
+    <div className="space-y-2">
+      <div className="text-sm leading-relaxed whitespace-pre-wrap">
+        {segments.map((segment, i) => {
+          if (segment.match(/^https?:\/\//)) {
+            const cleanUrl = segment.replace(/[.,;:!?)]$/, "");
+            return (
+              <a
+                key={i}
+                href={cleanUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-secondary underline underline-offset-2 transition-colors break-all"
+              >
+                {cleanUrl}
+              </a>
+            );
+          }
+          return <span key={i}>{segment}</span>;
+        })}
+      </div>
+
+      {citations && citations.length > 0 && (
+        <div className="pt-2 border-t border-border/30 mt-2">
+          <p className="text-xs font-semibold text-muted-foreground mb-1.5 flex items-center gap-1.5">
+            <BookOpen className="size-3" />
+            Fontes
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {citations.map((citation, idx) => (
+              <CitationLink key={idx} citation={citation} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TypingIndicator() {
+  return (
+    <div className="flex gap-3 items-start">
+      <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
+        <Bot className="size-4 text-white" />
+      </div>
+      <div className="flex-1 bg-muted/50 rounded-2xl rounded-tl-none px-4 py-3 border border-border/30">
+        <div className="flex items-center gap-1.5">
+          <div className="size-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+          <div className="size-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+          <div className="size-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function AIExplanationModal({
   isOpen,
@@ -90,54 +126,104 @@ export function AIExplanationModal({
   question,
   correctAnswer,
   selectedAnswer,
-  isCorrect
+  isCorrect,
+  subject,
+  messages,
+  questionId,
+  onMessagesUpdate,
 }: AIExplanationModalProps) {
-  const [state, setState] = useState<ModalState>("loading");
-  const [loadingMessage, setLoadingMessage] = useState(LOADING_MESSAGES[0]);
-  const [explanation, setExplanation] = useState(MOCK_EXPLANATIONS[0]);
+  const [inputValue, setInputValue] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    if (!isOpen) return;
+    scrollToBottom();
+  }, [messages, isSending]);
 
-    // Simular mudança de mensagem durante o loading
-    const messageInterval = setInterval(() => {
-      setLoadingMessage(
-        LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)]
-      );
-    }, 800);
-
-    // Simular requisição à API (2.5 segundos)
-    const timer = setTimeout(() => {
-      clearInterval(messageInterval);
-      
-      // 80% sucesso, 20% erro
-      if (Math.random() < 0.8) {
-        setExplanation(
-          MOCK_EXPLANATIONS[Math.floor(Math.random() * MOCK_EXPLANATIONS.length)]
-        );
-        setState("success");
-      } else {
-        setState("error");
-      }
-    }, 2500);
-
-    return () => {
-      clearInterval(messageInterval);
-      clearTimeout(timer);
-    };
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      handleSendMessage("Explique esta questão.");
+    }
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 300);
+    }
   }, [isOpen]);
+
+  const handleSendMessage = async (text?: string) => {
+    const messageText = text || inputValue.trim();
+    if (!messageText || isSending) return;
+
+    if (!text) setInputValue("");
+
+    const userMessage: ChatMessage = {
+      id: `user_${Date.now()}`,
+      role: "user",
+      content: messageText,
+      timestamp: Date.now(),
+    };
+
+    const updatedMessages = [...messages, userMessage];
+    onMessagesUpdate(updatedMessages);
+    setIsSending(true);
+
+    const context: AIQuestionContext = {
+      question,
+      selectedAnswer,
+      correctAnswer,
+      isCorrect,
+      subject,
+    };
+
+    try {
+      const aiResponse = await askAI(messageText, context, updatedMessages);
+      const finalMessages = [...updatedMessages, aiResponse];
+      onMessagesUpdate(finalMessages);
+    } catch (err) {
+      const errorMessage: ChatMessage = {
+        id: `error_${Date.now()}`,
+        role: "assistant",
+        content:
+          err instanceof Error
+            ? `Erro: ${err.message}`
+            : "Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente.",
+        timestamp: Date.now(),
+      };
+      const finalMessages = [...updatedMessages, errorMessage];
+      onMessagesUpdate(finalMessages);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleRate = (messageId: string, rating: "like" | "dislike") => {
+    setMessageRating(messageId, questionId, rating);
+    const updated = attachRatingsToMessages(messages, questionId);
+    onMessagesUpdate(updated);
+  };
 
   if (!isOpen) return null;
 
+  const ratedMessages = attachRatingsToMessages(messages, questionId);
+
   return (
     <>
-      {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/40 z-40 transition-opacity duration-300"
         onClick={onClose}
       />
 
-      {/* Modal */}
       <FocusTrap
         active={isOpen}
         focusTrapOptions={{
@@ -148,17 +234,26 @@ export function AIExplanationModal({
           escapeDeactivates: true,
         }}
       >
-        <div 
+        <div
           className="fixed inset-y-0 right-0 w-full sm:w-96 bg-background border-l border-border shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-background">
+          <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-background z-10">
             <div className="flex items-center gap-2">
-              <Sparkles className="size-5 text-primary" />
-              <h3 id="modal-title" style={fluidText.lg} className="font-bold text-foreground">Análise do Tutor</h3>
+              <div className="size-8 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
+                <Sparkles className="size-4 text-white" />
+              </div>
+              <div>
+                <h3 id="modal-title" className="font-bold text-sm text-foreground">
+                  TutorIA
+                </h3>
+                <p className="text-[10px] text-muted-foreground">
+                  Tire dúvidas sobre esta questão
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -166,197 +261,176 @@ export function AIExplanationModal({
               title="Fechar"
               aria-label="Fechar modal"
             >
-              <X className="size-5 text-muted-foreground hover:text-foreground" />
+              <X className="size-4 text-muted-foreground hover:text-foreground" />
             </button>
           </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Loading State */}
-          {state === "loading" && (
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground text-center animate-pulse">
-                {loadingMessage}
+          {/* Result Banner */}
+          <div
+            className={cn(
+              "mx-4 mt-3 p-3 rounded-xl border flex items-center gap-2.5",
+              isCorrect
+                ? "bg-emerald-500/10 border-emerald-500/30"
+                : "bg-red-500/10 border-red-500/30"
+            )}
+          >
+            {isCorrect ? (
+              <CheckCircle2 className="size-5 text-emerald-500 shrink-0" />
+            ) : (
+              <XCircle className="size-5 text-red-500 shrink-0" />
+            )}
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-foreground">
+                {isCorrect ? "Você acertou!" : "Você errou"}
               </p>
-              
-              <div className="space-y-3">
-                <div className="h-4 bg-muted rounded-full animate-pulse" />
-                <div className="h-4 bg-muted rounded-full animate-pulse w-5/6" />
-                <div className="h-4 bg-muted rounded-full animate-pulse w-4/6" />
-              </div>
-
-              <div className="pt-4 space-y-3">
-                <div className="h-3 bg-muted rounded-full animate-pulse" />
-                <div className="h-3 bg-muted rounded-full animate-pulse w-5/6" />
-                <div className="h-3 bg-muted rounded-full animate-pulse w-4/6" />
-              </div>
+              <p className="text-[11px] text-muted-foreground truncate">
+                Correto: {correctAnswer}
+              </p>
             </div>
-          )}
+          </div>
 
-          {/* Success State */}
-          {state === "success" && (
-            <div className="space-y-6">
-              {/* Resultado */}
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+            {ratedMessages.length === 0 && !isSending && (
+              <div className="flex flex-col items-center justify-center h-full text-center py-12">
+                <Bot className="size-12 text-muted-foreground/30 mb-3" />
+                <p className="text-sm text-muted-foreground font-medium">
+                  Faça uma pergunta sobre esta questão
+                </p>
+                <p className="text-xs text-muted-foreground/60 mt-1 max-w-[200px]">
+                  O TutorIA pode explicar o gabarito, aprofundar conceitos e dar dicas de estudo
+                </p>
+              </div>
+            )}
+
+            {ratedMessages.map((msg) => (
               <div
+                key={msg.id}
                 className={cn(
-                  "p-4 rounded-xl border-2 flex items-center gap-3",
-                  isCorrect
-                    ? "bg-emerald-500/10 border-emerald-500/50"
-                    : "bg-red-500/10 border-red-500/50"
+                  "flex gap-3 items-start",
+                  msg.role === "user" ? "flex-row-reverse" : ""
                 )}
               >
+                {/* Avatar */}
                 <div
                   className={cn(
-                    "size-6 rounded-full flex items-center justify-center flex-shrink-0 text-white",
-                    isCorrect ? "bg-emerald-500" : "bg-red-500"
+                    "size-8 rounded-xl flex items-center justify-center shrink-0 shadow-lg",
+                    msg.role === "user"
+                      ? "bg-muted shadow-black/5"
+                      : "bg-gradient-to-br from-primary to-secondary shadow-primary/20"
                   )}
                 >
-                  {isCorrect ? "✓" : "✗"}
+                  {msg.role === "user" ? (
+                    <User className="size-4 text-muted-foreground" />
+                  ) : msg.role === "assistant" && msg.content.startsWith("Erro:") ? (
+                    <AlertCircle className="size-4 text-white" />
+                  ) : (
+                    <Bot className="size-4 text-white" />
+                  )}
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    {isCorrect ? "Resposta Correta!" : "Resposta Incorreta"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Resposta correta: {correctAnswer}
-                  </p>
-                </div>
-              </div>
 
-              {/* Resumo */}
-              <div>
-                <h4 className="text-sm font-semibold text-foreground mb-2">
-                  Resumo
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {explanation.summary}
-                </p>
-              </div>
+                {/* Message Bubble */}
+                <div
+                  className={cn(
+                    "flex-1 min-w-0",
+                    msg.role === "user" ? "max-w-[85%]" : "max-w-[85%]"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "rounded-2xl px-4 py-3 border",
+                      msg.role === "user"
+                        ? "bg-primary/10 border-primary/20 rounded-tr-none"
+                        : msg.content.startsWith("Erro:")
+                          ? "bg-destructive/10 border-destructive/20 rounded-tl-none"
+                          : "bg-muted/50 border-border/30 rounded-tl-none"
+                    )}
+                  >
+                    <MessageContent
+                      content={msg.content}
+                      citations={msg.citations}
+                    />
+                  </div>
 
-              {/* Detalhes */}
-              <div>
-                <h4 className="text-sm font-semibold text-foreground mb-3">
-                  Análise Detalhada
-                </h4>
-                <ul className="space-y-2">
-                  {explanation.detail.map((point, idx) => (
-                    <li
-                      key={idx}
-                      className="flex gap-3 text-sm text-muted-foreground"
-                    >
-                      <span className="text-primary font-bold flex-shrink-0">
-                        {idx + 1}.
-                      </span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Fontes */}
-              <div className="border-t border-border pt-4">
-                <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <BookOpen className="size-4 text-primary" />
-                  Fontes Sugeridas
-                </h4>
-                <ul className="space-y-2">
-                  {explanation.sources.map((source, idx) => (
-                    <li key={idx}>
-                      <a
-                        href={source.link}
-                        className="text-xs text-primary hover:text-secondary transition-colors flex items-center gap-1.5"
+                  {/* Rating Buttons (only for assistant messages) */}
+                  {msg.role === "assistant" && !msg.content.startsWith("Erro:") && (
+                    <div className="flex items-center gap-1 mt-1.5 px-1">
+                      <button
+                        onClick={() => handleRate(msg.id, "like")}
+                        className={cn(
+                          "p-1 rounded-md transition-colors",
+                          msg.rating === "like"
+                            ? "text-emerald-500 bg-emerald-500/10"
+                            : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                        )}
+                        title="Útil"
+                        aria-label="Marcar como útil"
                       >
-                        {source.title}
-                        <span className="text-[10px]">↗</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
-
-          {/* Error State */}
-          {state === "error" && (
-            <div className="space-y-6">
-              {/* Alerta */}
-              <div className="p-4 rounded-xl bg-warning/10 border border-warning/50 flex gap-3">
-                <AlertTriangle className="size-5 text-warning flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    IA Indisponível
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    A análise com IA está temporariamente indisponível. Exibindo gabarito padrão.
-                  </p>
+                        <ThumbsUp className="size-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleRate(msg.id, "dislike")}
+                        className={cn(
+                          "p-1 rounded-md transition-colors",
+                          msg.rating === "dislike"
+                            ? "text-red-500 bg-red-500/10"
+                            : "text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted/50"
+                        )}
+                        title="Não útil"
+                        aria-label="Marcar como não útil"
+                      >
+                        <ThumbsDown className="size-3.5" />
+                      </button>
+                      {msg.rating && (
+                        <span className="text-[10px] text-muted-foreground/50 ml-1">
+                          {msg.rating === "like" ? "Útil" : "Não útil"}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
+            ))}
 
-              {/* Resultado */}
-              <div className="p-4 rounded-xl border-2 border-muted bg-muted/30">
-                <p className="text-sm font-semibold text-foreground mb-2">
-                  Resposta Correta
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {correctAnswer}
-                </p>
-              </div>
+            {isSending && <TypingIndicator />}
 
-              {/* Explicação Padrão */}
-              <div>
-                <h4 className="text-sm font-semibold text-foreground mb-2">
-                  Explicação Padrão
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                  {MOCK_ERROR_EXPLANATION.summary}
-                </p>
-                <ul className="space-y-2">
-                  {MOCK_ERROR_EXPLANATION.detail.map((point, idx) => (
-                    <li
-                      key={idx}
-                      className="text-xs text-muted-foreground flex gap-2"
-                    >
-                      <span className="text-primary font-bold flex-shrink-0">
-                        •
-                      </span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div ref={messagesEndRef} />
+          </div>
 
-              {/* Fontes */}
-              <div className="border-t border-border pt-4">
-                <h4 className="text-sm font-semibold text-foreground mb-3">
-                  Materiais de Referência
-                </h4>
-                <ul className="space-y-2">
-                  {MOCK_ERROR_EXPLANATION.sources.map((source, idx) => (
-                    <li key={idx}>
-                      <a
-                        href={source.link}
-                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {source.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+          {/* Input */}
+          <div className="p-4 border-t border-border bg-background sticky bottom-0">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Pergunte sobre a questão..."
+                  disabled={isSending}
+                  className="w-full h-10 px-4 pr-10 text-sm bg-muted/50 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground/50 disabled:opacity-50"
+                />
               </div>
+              <Button
+                onClick={() => handleSendMessage()}
+                disabled={!inputValue.trim() || isSending}
+                size="icon"
+                className="size-10 shrink-0 rounded-xl"
+                aria-label="Enviar pergunta"
+              >
+                {isSending ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Send className="size-4" />
+                )}
+              </Button>
             </div>
-          )}
+            <p className="text-[10px] text-muted-foreground/50 text-center mt-2">
+              O TutorIA pode cometer erros. Verifique informações importantes.
+            </p>
+          </div>
         </div>
-
-        {/* Footer */}
-        <div className="p-6 border-t border-border bg-background sticky bottom-0">
-          <Button
-            onClick={onClose}
-            className="w-full"
-          >
-            Entendido
-          </Button>
-        </div>
-      </div>
       </FocusTrap>
     </>
   );

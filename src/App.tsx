@@ -6,11 +6,14 @@ import { DetailedProfile } from './components/DetailedProfile';
 import { CustomizeSimulationScreen } from './screens/CustomizeSimulationScreen';
 import { SimulationRunnerScreen } from './screens/SimulationRunnerScreen';
 import { ReviewSubmissionScreen } from './screens/ReviewSubmissionScreen';
+import { DownloadExamScreen } from './screens/DownloadExamScreen';
+import { DashboardContainer } from './screens/dashboard/DashboardContainer';
+import { TransparencyDemo } from './components/TransparencyDemo';
 import { mockQuestions } from './data/mockQuestions';
-import { SimulationConfig, Answer } from './types/simulation';
+import { SimulationConfig, Answer, DownloadedFile } from './types/simulation';
 import { ThemeSelector } from './components/ui/theme-selector';
 
-type Screen = 'login' | 'customize' | 'runner' | 'review' | 'processing' | 'result' | 'profile';
+type Screen = 'login' | 'download-exam' | 'customize' | 'runner' | 'review' | 'processing' | 'result' | 'profile' | 'dashboard' | 'transparency';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
@@ -18,18 +21,26 @@ export default function App() {
   const [simulationConfig, setSimulationConfig] = useState<SimulationConfig | null>(null);
   const [currentAnswers, setCurrentAnswers] = useState<Answer[]>([]);
   const [targetQuestionIndex, setTargetQuestionIndex] = useState<number>(0);
+  const [downloadedExam, setDownloadedExam] = useState<DownloadedFile | null>(null);
+  const [downloadedGabarito, setDownloadedGabarito] = useState<DownloadedFile | null>(null);
 
   // Handlers de Navegação
   const handleLoginSuccess = (id: string) => {
     setInscription(id);
-    // Se o ID for o de sucesso, avançamos para personalização
+    // Se o ID for o de sucesso, avançamos para download da prova
     if (id === "123456789012") {
-      setCurrentScreen('customize');
+      setCurrentScreen('download-exam');
     } else {
       // Para outros IDs (erro/não encontrado), vamos direto para a tela de resultado
       // onde o ResultScreen tratará a exibição da mensagem de erro
       setCurrentScreen('processing');
     }
+  };
+
+  const handleDownloadComplete = (exam: DownloadedFile, gabarito: DownloadedFile) => {
+    setDownloadedExam(exam);
+    setDownloadedGabarito(gabarito);
+    setCurrentScreen('customize');
   };
 
   const handleGenerateSimulado = (config: SimulationConfig) => {
@@ -72,7 +83,11 @@ export default function App() {
   };
 
   const handleViewDetails = () => {
-    setCurrentScreen('profile');
+    setCurrentScreen('dashboard');
+  };
+
+  const handleBackFromDashboard = () => {
+    setCurrentScreen('result');
   };
 
   const handleBackToLogin = () => {
@@ -80,6 +95,8 @@ export default function App() {
     setSimulationConfig(null);
     setCurrentAnswers([]);
     setTargetQuestionIndex(0);
+    setDownloadedExam(null);
+    setDownloadedGabarito(null);
     setCurrentScreen('login');
   };
 
@@ -88,13 +105,16 @@ export default function App() {
   };
 
   const handleBackToCustomize = () => {
-    setCurrentScreen('customize');
+    setCurrentScreen('download-exam');
   };
 
   const handleViewProfileFromLogin = () => {
-    // Usar um ID padrão para demo
     setInscription('123456789012');
     setCurrentScreen('profile');
+  };
+
+  const handleViewTransparencyDemo = () => {
+    setCurrentScreen('transparency');
   };
 
   // Get questions based on config
@@ -117,13 +137,21 @@ export default function App() {
         <ConsultationForm 
           onSubmit={handleLoginSuccess}
           onViewProfile={handleViewProfileFromLogin}
+          onViewTransparency={handleViewTransparencyDemo}
+        />
+      )}
+
+      {currentScreen === 'download-exam' && (
+        <DownloadExamScreen
+          onComplete={handleDownloadComplete}
+          onBack={handleBackToLogin}
         />
       )}
 
       {currentScreen === 'customize' && (
         <CustomizeSimulationScreen 
           onGenerate={handleGenerateSimulado}
-          onBack={handleBackToLogin}
+          onBack={() => setCurrentScreen('download-exam')}
         />
       )}
 
@@ -163,6 +191,14 @@ export default function App() {
           onBackToSearch={handleBackToLogin}
           onViewDetails={handleViewDetails}
         />
+      )}
+
+      {currentScreen === 'dashboard' && (
+        <DashboardContainer onBackToApp={handleBackFromDashboard} />
+      )}
+
+      {currentScreen === 'transparency' && (
+        <TransparencyDemo />
       )}
 
       {currentScreen === 'profile' && (
