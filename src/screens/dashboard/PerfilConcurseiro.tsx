@@ -3,11 +3,15 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { fluidText } from "../../lib/fluid-typography";
-import { mockRadarAttributes, mockTrendData } from "../../data/mockDashboard";
+import { mockRadarAttributes, mockTrendData, latestAttempt as mockLatest } from "../../data/mockDashboard";
 import { TrendingDown } from "lucide-react";
+import { ComparisonSection } from "../../components/ComparisonSection";
+import type { SimuladoAttempt } from "../../types/dashboard";
 
 interface PerfilConcurseiroProps {
   onBack: () => void;
+  history?: SimuladoAttempt[];
+  latestAttempt?: SimuladoAttempt;
 }
 
 function RadarChart({ data }: { data: typeof mockRadarAttributes }) {
@@ -99,12 +103,21 @@ function RadarChart({ data }: { data: typeof mockRadarAttributes }) {
   );
 }
 
-export function PerfilConcurseiro({ onBack }: PerfilConcurseiroProps) {
+export function PerfilConcurseiro({ onBack, history, latestAttempt: propLatestAttempt }: PerfilConcurseiroProps) {
+  const latestAttemptData = propLatestAttempt || mockLatest;
   const highest = [...mockRadarAttributes].sort((a, b) => b.value - a.value)[0];
   const lowest = [...mockRadarAttributes].sort((a, b) => a.value - b.value)[0];
   const lastScore = mockTrendData[mockTrendData.length - 1].score;
   const firstScore = mockTrendData[0].score;
   const evolution = lastScore - firstScore;
+
+  const trendData = (history && history.length > 1)
+    ? history.slice().reverse().map((a) => ({
+        date: a.id,
+        score: a.score,
+        label: new Date(a.date + 'T00:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }),
+      })).reverse()
+    : mockTrendData;
 
   return (
     <div className="min-h-screen w-full bg-background relative overflow-hidden">
@@ -225,6 +238,25 @@ export function PerfilConcurseiro({ onBack }: PerfilConcurseiroProps) {
             </Card>
           </div>
 
+          {/* Comparison Section */}
+          <ComparisonSection
+            rankingData={{
+              label: 'Melhor do Ranking',
+              yourValue: latestAttemptData.score,
+              compareValue: 93.5,
+            }}
+            averageData={{
+              label: 'Média Geral',
+              yourValue: latestAttemptData.score,
+              compareValue: 68.4,
+            }}
+            selfData={[
+              { label: 'Há 1 mês', yourValue: latestAttemptData.score, compareValue: 55 },
+              { label: 'Há 2 semanas', yourValue: latestAttemptData.score, compareValue: 70 },
+              { label: 'Último', yourValue: latestAttemptData.score, compareValue: 78.5 },
+            ]}
+          />
+
           {/* Trend Chart */}
           <Card className="border-0 backdrop-blur-sm bg-card/95 shadow-2xl relative overflow-hidden">
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl" />
@@ -237,7 +269,7 @@ export function PerfilConcurseiro({ onBack }: PerfilConcurseiroProps) {
                   <h2 className="text-2xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                     Evolução das Notas
                   </h2>
-                  <p className="text-sm text-muted-foreground mt-1">Últimos {mockTrendData.length} simulados</p>
+                  <p className="text-sm text-muted-foreground mt-1">Últimos {trendData.length} simulados</p>
                 </div>
                 <div className="ml-auto">
                   <Badge variant={evolution >= 0 ? 'success' : 'destructive'} className="text-sm px-4 py-1.5 flex items-center gap-1">
@@ -248,7 +280,7 @@ export function PerfilConcurseiro({ onBack }: PerfilConcurseiroProps) {
               </div>
 
               <div className="h-64 flex items-end justify-between gap-2 px-2">
-                {mockTrendData.map((point, idx) => {
+                {trendData.map((point, idx) => {
                   const height = (point.score / 100) * 200;
                   const color = point.score >= 80 ? '#10b981' : point.score >= 65 ? '#f59e0b' : '#ef4444';
                   return (

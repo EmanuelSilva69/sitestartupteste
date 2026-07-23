@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   X,
   ThumbsUp,
@@ -16,6 +16,7 @@ import {
 import { cn } from "./ui/utils";
 import { TransparencyData, FeedbackType } from "../types/transparency";
 import FocusTrap from "focus-trap-react";
+import { saveTransparencyFeedback, getTransparencyFeedback } from "../lib/transparency-storage";
 
 interface AITransparencyPanelProps {
   isOpen: boolean;
@@ -36,11 +37,28 @@ export function AITransparencyPanel({ isOpen, onClose, data, onFeedback }: AITra
   const [feedback, setFeedback] = useState<FeedbackType | null>(null);
   const [feedbackSent, setFeedbackSent] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      const saved = getTransparencyFeedback(data.messageId);
+      if (saved) {
+        setFeedback(saved);
+        setFeedbackSent(true);
+      } else {
+        setFeedback(null);
+        setFeedbackSent(false);
+      }
+    }
+  }, [isOpen, data.messageId]);
+
   const handleFeedback = useCallback((type: FeedbackType) => {
-    setFeedback(type);
-    setFeedbackSent(true);
-    onFeedback?.(data.messageId, type);
-  }, [data.messageId, onFeedback]);
+    const newFeedback = feedback === type ? null : type;
+    setFeedback(newFeedback);
+    setFeedbackSent(newFeedback !== null);
+    if (newFeedback) {
+      saveTransparencyFeedback(data.messageId, newFeedback, data.questionData.text);
+    }
+    onFeedback?.(data.messageId, newFeedback || type);
+  }, [data.messageId, data.questionData.text, feedback, onFeedback]);
 
   const userAnswerLetter = data.questionData.userAnswer;
   const correctAnswerLetter = data.questionData.correctAnswer;

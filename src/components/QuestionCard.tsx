@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { CheckCircle, XCircle, Circle, Sparkles } from "lucide-react";
+import { CheckCircle, XCircle, Circle, Sparkles, Eye } from "lucide-react";
 import { cn } from "./ui/utils";
 import { Question, Alternative } from "../types/simulation";
 import { Button } from "./ui/button";
@@ -19,6 +19,7 @@ interface QuestionCardProps {
   correctAnswerId?: string;
   onRequestExplanation?: () => void;
   onNextQuestion?: () => void;
+  onRequestEvidence?: () => void;
 }
 
 export function QuestionCard({
@@ -33,6 +34,7 @@ export function QuestionCard({
   correctAnswerId = "",
   onRequestExplanation = () => {},
   onNextQuestion = () => {},
+  onRequestEvidence,
 }: QuestionCardProps) {
   const handleSelect = (alternativeId: string) => {
     if (!disabled) {
@@ -159,7 +161,7 @@ export function QuestionCard({
 
       {/* Action Bar - Feedback Mode */}
       {feedbackMode && selectedAnswer && (
-        <div className="flex gap-3 pt-6 border-t border-border/50">
+        <div className="flex flex-wrap gap-3 pt-6 border-t border-border/50">
           <Button
             onClick={onRequestExplanation}
             variant="outline"
@@ -168,6 +170,16 @@ export function QuestionCard({
             <Sparkles className="size-4" aria-hidden="true" />
             Explicar com IA
           </Button>
+          {onRequestEvidence && (
+            <Button
+              onClick={onRequestEvidence}
+              variant="outline"
+              className="flex-1 gap-2"
+            >
+              <Eye className="size-4" aria-hidden="true" />
+              Ver Evidências
+            </Button>
+          )}
           <Button
             onClick={onNextQuestion}
             className="flex-1"

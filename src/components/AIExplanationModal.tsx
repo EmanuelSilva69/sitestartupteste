@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   XCircle,
   BookOpen,
+  Eye,
 } from "lucide-react";
 import { cn } from "./ui/utils";
 import { Button } from "./ui/button";
@@ -26,6 +27,10 @@ import {
 import { askAI } from "../lib/ai-service";
 import { setMessageRating, attachRatingsToMessages } from "../lib/ai-storage";
 import FocusTrap from "focus-trap-react";
+import { MarkdownRenderer } from "./MarkdownRenderer";
+import { AITransparencyPanel } from "./AITransparencyPanel";
+import { mockTransparency } from "../data/mockTransparency";
+import { FeedbackType } from "../types/transparency";
 
 interface AIExplanationModalProps {
   isOpen: boolean;
@@ -66,24 +71,8 @@ function MessageContent({ content, citations }: { content: string; citations?: C
 
   return (
     <div className="space-y-2">
-      <div className="text-sm leading-relaxed whitespace-pre-wrap">
-        {segments.map((segment, i) => {
-          if (segment.match(/^https?:\/\//)) {
-            const cleanUrl = segment.replace(/[.,;:!?)]$/, "");
-            return (
-              <a
-                key={i}
-                href={cleanUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:text-secondary underline underline-offset-2 transition-colors break-all"
-              >
-                {cleanUrl}
-              </a>
-            );
-          }
-          return <span key={i}>{segment}</span>;
-        })}
+      <div className="text-sm leading-relaxed">
+        <MarkdownRenderer content={content} />
       </div>
 
       {citations && citations.length > 0 && (
@@ -207,6 +196,8 @@ export function AIExplanationModal({
     }
   };
 
+  const [showEvidence, setShowEvidence] = useState(false);
+
   const handleRate = (messageId: string, rating: "like" | "dislike") => {
     setMessageRating(messageId, questionId, rating);
     const updated = attachRatingsToMessages(messages, questionId);
@@ -255,14 +246,29 @@ export function AIExplanationModal({
                 </p>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-muted rounded-lg transition-colors"
-              title="Fechar"
-              aria-label="Fechar modal"
-            >
-              <X className="size-4 text-muted-foreground hover:text-foreground" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowEvidence(!showEvidence)}
+                className={cn(
+                  "p-2 rounded-lg transition-colors hidden sm:block",
+                  showEvidence
+                    ? "bg-primary/20 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+                title="Ver evidências"
+                aria-label="Abrir painel de evidências"
+              >
+                <Eye className="size-4" />
+              </button>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                title="Fechar"
+                aria-label="Fechar modal"
+              >
+                <X className="size-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            </div>
           </div>
 
           {/* Result Banner */}
@@ -432,6 +438,26 @@ export function AIExplanationModal({
           </div>
         </div>
       </FocusTrap>
+
+      <AITransparencyPanel
+        isOpen={showEvidence}
+        onClose={() => setShowEvidence(false)}
+        data={{
+          ...mockTransparency,
+          messageId: `evidence_${questionId}`,
+          questionData: {
+            ...mockTransparency.questionData,
+            text: question.statement,
+            userAnswer: selectedAnswer,
+            correctAnswer: correctAnswer,
+          },
+          aiResponse: messages.filter(m => m.role === 'assistant' && !m.content.startsWith('Erro:'))
+            .slice(-1)[0]?.content || mockTransparency.aiResponse,
+        }}
+        onFeedback={(messageId, type: FeedbackType) => {
+          console.log('Evidence feedback:', messageId, type);
+        }}
+      />
     </>
   );
 }

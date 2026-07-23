@@ -3,12 +3,14 @@ import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { fluidText } from "../../lib/fluid-typography";
-import { latestAttempt } from "../../data/mockDashboard";
+import { latestAttempt as mockAttempt } from "../../data/mockDashboard";
+import type { SimuladoAttempt } from "../../types/dashboard";
 
 interface ResultadoSimuladoProps {
   onBack: () => void;
   onViewHistory: () => void;
   onViewDetails: () => void;
+  attempt?: SimuladoAttempt;
 }
 
 function formatTime(minutes: number): string {
@@ -17,8 +19,8 @@ function formatTime(minutes: number): string {
   return `${h}h ${m.toString().padStart(2, '0')}m`;
 }
 
-export function ResultadoSimulado({ onBack, onViewHistory, onViewDetails }: ResultadoSimuladoProps) {
-  const attempt = latestAttempt;
+export function ResultadoSimulado({ onBack, onViewHistory, onViewDetails, attempt: propAttempt }: ResultadoSimuladoProps) {
+  const attempt = propAttempt || mockAttempt;
   const scoreColor = attempt.score >= 80 ? 'emerald' : attempt.score >= 65 ? 'amber' : 'red';
 
   return (

@@ -9,6 +9,7 @@ import type { SimuladoAttempt, QuestionResult } from "../../types/dashboard";
 interface DetalheTentativaProps {
   attemptId: string;
   onBack: () => void;
+  allAttempts?: SimuladoAttempt[];
 }
 
 function formatTime(minutes: number): string {
@@ -26,12 +27,13 @@ function formatSeconds(seconds: number): string {
   return `${seconds}s`;
 }
 
-function getAttempt(id: string): SimuladoAttempt {
-  return mockAttempts.find((a) => a.id === id) || mockAttempts[0];
+function getAttempt(id: string, allAttempts?: SimuladoAttempt[]): SimuladoAttempt {
+  const attempts = allAttempts && allAttempts.length > 0 ? allAttempts : mockAttempts;
+  return attempts.find((a) => a.id === id) || attempts[0];
 }
 
-export function DetalheTentativa({ attemptId, onBack }: DetalheTentativaProps) {
-  const attempt = getAttempt(attemptId);
+export function DetalheTentativa({ attemptId, onBack, allAttempts }: DetalheTentativaProps) {
+  const attempt = getAttempt(attemptId, allAttempts);
 
   const timePerArea = attempt.areas.map((area) => ({
     name: area.name,

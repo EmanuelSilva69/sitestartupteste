@@ -7,13 +7,13 @@ import { SimuladoTimer } from "../components/SimuladoTimer";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import {
-  Pause,
   Flag,
   ChevronLeft,
   ChevronRight,
   Grid3x3,
   AlertCircle,
-  Home
+  Home,
+  Loader2
 } from "lucide-react";
 import { cn } from "../components/ui/utils";
 import {
@@ -27,16 +27,19 @@ import {
   AlertDialogTitle,
 } from "../components/ui/alert-dialog";
 import { QuestionCardSkeleton } from "../components/ui/skeleton";
+import { AITransparencyPanel } from "../components/AITransparencyPanel";
+import { mockTransparency } from "../data/mockTransparency";
+import { FeedbackType } from "../types/transparency";
 
 interface SimulationRunnerScreenProps {
   questions: Question[];
   config: SimulationConfig;
-  onPause: () => void;
   onExit: () => void;
   onReview: () => void;
   onSubmit: () => void;
   onUpdateAnswers: (answers: Answer[]) => void;
   initialQuestionIndex?: number;
+  onTimeExpired?: () => void;
 }
 
 const STORAGE_KEY = "startplay_simulation_state";
@@ -44,12 +47,12 @@ const STORAGE_KEY = "startplay_simulation_state";
 export function SimulationRunnerScreen({
   questions,
   config,
-  onPause,
   onExit,
   onReview,
   onSubmit,
   onUpdateAnswers,
-  initialQuestionIndex = 0
+  initialQuestionIndex = 0,
+  onTimeExpired,
 }: SimulationRunnerScreenProps) {
   // Initialize answers
   const [answers, setAnswers] = useState<Answer[]>(() => {
@@ -98,7 +101,40 @@ export function SimulationRunnerScreen({
   const [showAIExplanation, setShowAIExplanation] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>({});
+  const [showEvidence, setShowEvidence] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [backgroundProgress, setBackgroundProgress] = useState(0);
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // Progressive loading: first question loads fast, rest in background
+  useEffect(() => {
+    // First question loads immediately (no skeleton delay)
+    if (currentQuestionIndex === 0) {
+      setIsLoading(false);
+    } else {
+      const timer = setTimeout(() => setIsLoading(false), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [currentQuestionIndex]);
+
+  // Simulate background loading of remaining questions
+  useEffect(() => {
+    if (questions.length > 1) {
+      setIsBackgroundLoading(true);
+      const totalQuestions = questions.length;
+      let loaded = 1;
+      const interval = setInterval(() => {
+        loaded++;
+        setBackgroundProgress(Math.round((loaded / totalQuestions) * 100));
+        if (loaded >= totalQuestions) {
+          clearInterval(interval);
+          setIsBackgroundLoading(false);
+        }
+      }, 200);
+      return () => clearInterval(interval);
+    }
+  }, [questions.length]);
 
   // Sync question index when coming back from review
   useEffect(() => {
@@ -127,8 +163,8 @@ export function SimulationRunnerScreen({
       const timer = setInterval(() => {
         setTimeRemaining((prev: number | undefined) => {
           if (prev === undefined || prev <= 1) {
-            // Time's up - auto submit
             clearInterval(timer);
+            onTimeExpired?.();
             onSubmit();
             return 0;
           }
@@ -138,7 +174,7 @@ export function SimulationRunnerScreen({
 
       return () => clearInterval(timer);
     }
-  }, [config.mode, timeRemaining, onSubmit]);
+  }, [config.mode, timeRemaining, onSubmit, onTimeExpired]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -266,14 +302,31 @@ export function SimulationRunnerScreen({
             <span className="hidden sm:inline">Sair</span>
           </Button>
 
-          {/* Center: Timer (Real mode only) */}
+          {/* Center: Timer or Background Load Progress */}
           <div className="flex-1 flex justify-center">
             {config.mode === "real" && timeRemaining !== undefined && (
-              <div className="flex items-center gap-3 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl">
-                <SimuladoTimer
-                  initialTimeInSeconds={timeRemaining}
-                  onTimeEnd={onSubmit}
-                />
+              <div className="flex flex-col items-center gap-1">
+                <div className="flex items-center gap-3 px-4 py-2 bg-primary/10 border border-primary/20 rounded-xl">
+                  <SimuladoTimer
+                    initialTimeInSeconds={timeRemaining}
+                    onTimeEnd={onSubmit}
+                  />
+                </div>
+                {isBackgroundLoading && (
+                  <div className="w-32 h-1 bg-border rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-300" style={{width: `${backgroundProgress}%`}} />
+                  </div>
+                )}
+              </div>
+            )}
+            {config.mode === "training" && isBackgroundLoading && (
+              <div className="flex items-center gap-2">
+                <div className="w-24 sm:w-36 h-1.5 bg-border rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-300" style={{width: `${backgroundProgress}%`}} />
+                </div>
+                <span className="text-xs text-muted-foreground font-medium">
+                  {backgroundProgress}%
+                </span>
               </div>
             )}
           </div>
@@ -308,17 +361,22 @@ export function SimulationRunnerScreen({
         className="flex-1 overflow-y-auto bg-gradient-to-br from-background via-muted/5 to-background"
       >
         <div className="container mx-auto px-4 py-8 max-w-5xl">
-          <QuestionCard
-            question={currentQuestion}
-            totalQuestions={questions.length}
-            onSelectAnswer={handleSelectAnswer}
-            selectedAnswer={currentAnswer?.selectedAlternative}
-            feedbackMode={feedbackMode}
-            isCorrect={currentQuestion.correctAnswer ? currentAnswer?.selectedAlternative === currentQuestion.correctAnswer : false}
-            correctAnswerId={currentQuestion.correctAnswer || ""}
-            onRequestExplanation={() => setShowAIExplanation(true)}
-            onNextQuestion={handleNext}
-          />
+          {isLoading ? (
+            <QuestionCardSkeleton />
+          ) : (
+            <QuestionCard
+              question={currentQuestion}
+              totalQuestions={questions.length}
+              onSelectAnswer={handleSelectAnswer}
+              selectedAnswer={currentAnswer?.selectedAlternative}
+              feedbackMode={feedbackMode}
+              isCorrect={currentQuestion.correctAnswer ? currentAnswer?.selectedAlternative === currentQuestion.correctAnswer : false}
+              correctAnswerId={currentQuestion.correctAnswer || ""}
+              onRequestExplanation={() => setShowAIExplanation(true)}
+              onNextQuestion={handleNext}
+              onRequestEvidence={() => setShowEvidence(true)}
+            />
+          )}
         </div>
       </main>
 
@@ -461,6 +519,29 @@ export function SimulationRunnerScreen({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AITransparencyPanel
+        isOpen={showEvidence}
+        onClose={() => setShowEvidence(false)}
+        data={{
+          ...mockTransparency,
+          messageId: `evidence_${currentQuestion.id}`,
+          questionData: {
+            ...mockTransparency.questionData,
+            text: currentQuestion.statement,
+            userAnswer: currentAnswer?.selectedAlternative?.toUpperCase() || 'N/A',
+            correctAnswer: currentQuestion.correctAnswer?.toUpperCase() || 'N/A',
+          },
+          aiResponse: currentAnswer?.selectedAlternative
+            ? currentAnswer.selectedAlternative === currentQuestion.correctAnswer
+              ? 'Você acertou! A alternativa selecionada está correta.'
+              : `A alternativa correta é ${currentQuestion.correctAnswer?.toUpperCase()}.`
+            : 'Responda a questão para ver a explicação.',
+        }}
+        onFeedback={(messageId, type: FeedbackType) => {
+          console.log('Evidence feedback:', messageId, type);
+        }}
+      />
     </div>
   );
 }

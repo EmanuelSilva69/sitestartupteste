@@ -11,6 +11,7 @@ interface HistoricoTentativasProps {
   onBack: () => void;
   onSelectAttempt: (id: string) => void;
   onViewProfile: () => void;
+  attempts?: SimuladoAttempt[];
 }
 
 function formatTime(minutes: number): string {
@@ -26,11 +27,13 @@ function formatDate(dateStr: string): string {
 
 type PeriodFilter = 'all' | '7' | '30' | '90';
 
-export function HistoricoTentativas({ onBack, onSelectAttempt, onViewProfile }: HistoricoTentativasProps) {
+export function HistoricoTentativas({ onBack, onSelectAttempt, onViewProfile, attempts: propAttempts }: HistoricoTentativasProps) {
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredAttempts = mockAttempts.filter((a) => {
+  const allAttempts = propAttempts && propAttempts.length > 0 ? propAttempts : mockAttempts;
+
+  const filteredAttempts = allAttempts.filter((a) => {
     if (periodFilter !== 'all') {
       const days = parseInt(periodFilter);
       const cutoff = new Date();
@@ -106,6 +109,22 @@ export function HistoricoTentativas({ onBack, onSelectAttempt, onViewProfile }: 
 
         {/* List */}
         <div className="space-y-4">
+          {filteredAttempts.length === 0 && (
+            <div className="flex flex-col items-center justify-center text-center py-16">
+              <div className="size-16 rounded-3xl bg-muted/50 border border-border/50 flex items-center justify-center mb-4">
+                <Search className="size-8 text-muted-foreground/40" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground mb-2">Nenhum resultado encontrado</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mb-6">
+                {searchTerm ? `Nenhum simulado encontrado para "${searchTerm}".` : 'Nenhum simulado neste período.'}
+              </p>
+              {searchTerm && (
+                <Button variant="outline" onClick={() => setSearchTerm('')} className="rounded-full px-6">
+                  Limpar busca
+                </Button>
+              )}
+            </div>
+          )}
           {filteredAttempts.map((attempt) => (
             <Card
               key={attempt.id}
